@@ -1,28 +1,18 @@
 package com.noradltd.medusa.scrum;
 
+import static com.noradltd.medusa.scrum.SprintStreamifier.sprintToStream;
+import static com.noradltd.medusa.scrum.SprintBuilder.defaultSprint;
+import static com.noradltd.medusa.scrum.SprintBuilder.emptySprint;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
-
-import com.google.gson.GsonBuilder;
-
 public class SprintClockTest {
 	private SprintClock clock = new SprintClock();;
-
-	class Day {
-
-	}
-
-	class Sprint {
-		List<Day> days = new ArrayList<Day>();
-	}
 
 	private void run(InputStream stream) {
 		clock.setStream(stream);
@@ -62,21 +52,4 @@ public class SprintClockTest {
 		assertThat(clock.getCycles(), is(2));
 	}
 
-	private Sprint emptySprint() {
-		return new Sprint();
-	}
-
-	private Sprint defaultSprint() {
-		Sprint sprint = emptySprint();
-		sprint.days.add(new Day());
-		sprint.days.add(new Day());
-		sprint.days.add(new Day());
-		sprint.days.add(new Day());
-		sprint.days.add(new Day());
-		return sprint;
-	}
-
-	private InputStream sprintToStream(Sprint... sprints) {
-		return new ByteArrayInputStream(new GsonBuilder().create().toJson(sprints).getBytes());
-	}
 }
