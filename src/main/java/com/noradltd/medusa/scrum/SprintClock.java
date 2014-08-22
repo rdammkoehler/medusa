@@ -34,7 +34,7 @@ public class SprintClock {
 				}
 			}
 		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
+			System.err.println("Input was not in a readable JSON format");
 		}
 	}
 
