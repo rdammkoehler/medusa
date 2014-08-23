@@ -9,15 +9,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 class SprintRunner {
-	private JsonObject sprint;
-	private SprintResult sprintResult;
-	private Set<Card> notStarted;
-	private Set<Card> notDone;
-	private Set<Card> done;
-	private Set<Card> verified;
-	private Set<Defect> defectsCreated;
-	private Set<SDeveloper> developers;
-	private Set<SprintResultListener> resultListeners = new HashSet<SprintResultListener>();
+	private final JsonObject sprint;
+	private final SprintResult sprintResult;
+	private final Set<Card> notStarted;
+	private final Set<Card> notDone;
+	private final Set<Card> done;
+	private final Set<Card> verified;
+	private final Set<Defect> defectsCreated;
+	private final Set<SDeveloper> developers;
+	private final Set<SprintResultListener> resultListeners = new HashSet<SprintResultListener>();
 	
 	@Deprecated
 	private void log(String message) {
@@ -35,6 +35,7 @@ class SprintRunner {
 		done = sprintResult.getDone();
 		verified = sprintResult.getVerified();
 		defectsCreated = sprintResult.getDefectsCreated();
+		developers = new HashSet<SDeveloper>();
 	}
 
 	class SCard extends Card {
@@ -167,7 +168,7 @@ class SprintRunner {
 	private void loadDevelopers() {
 		JsonObject team = sprint.getAsJsonObject("team");
 		JsonArray developersJson = team.getAsJsonArray("developers");
-		developers = new HashSet<SDeveloper>();
+		developers.clear();
 		for (JsonElement developerJson : developersJson) {
 			SDeveloper e = new SDeveloper(developerJson.getAsJsonObject());
 			developers.add(e);

@@ -18,7 +18,7 @@ public class SprintClock implements SprintResultListener {
 
 	private InputStream stream;
 	private Integer cycles;
-	Set<SprintResultListener> resultListeners = new HashSet<SprintResultListener>();
+	private final Set<SprintResultListener> resultListeners = new HashSet<SprintResultListener>();
 
 	public SprintClock() {
 		addResultListener(this);

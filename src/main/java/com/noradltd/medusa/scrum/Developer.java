@@ -22,18 +22,19 @@ public class Developer implements Comparable<Developer> {
 
 	@Override
 	public boolean equals(Object obj) {
+		boolean equals = true;
 		if (this == obj)
-			return true;
+			equals = true;
 		if (obj == null)
-			return false;
+			equals = false;
 		if (getClass() != obj.getClass())
-			return false;
+			equals = false;
 		Developer other = (Developer) obj;
 		if (id == null) {
 			if (other.id != null)
-				return false;
+				equals = false;
 		} else if (!id.equals(other.id))
-			return false;
-		return true;
+			equals = false;
+		return equals;
 	}
 }
