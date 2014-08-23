@@ -18,11 +18,11 @@ class SprintRunner {
 	private final Set<Defect> defectsCreated;
 	private final Set<SDeveloper> developers;
 	private final Set<SprintResultListener> resultListeners = new HashSet<SprintResultListener>();
-	
+
 	@Deprecated
 	private void log(String message) {
 		// diag method while I'm messing around
-//		System.out.println(message);
+		System.out.println(message);
 	}
 
 	public SprintRunner(JsonObject sprint, Set<SprintResultListener> resultListeners) {
@@ -38,59 +38,7 @@ class SprintRunner {
 		developers = new HashSet<SDeveloper>();
 	}
 
-	class SCard extends Card {
-		SCard(JsonObject cardJson) {
-			super(Card.Size.forInt(cardJson.get("size").getAsInt()));
-			this.id = cardJson.get("id").getAsInt();
-			this.shouldCreateDefect = cardJson.get("shouldCreateDefect").getAsBoolean();
-		}
-
-		@Override
-		public String toString() {
-			return new StringBuilder("Card ").append(id).append("(").append(size).append(")").toString();
-		}
-	}
-
-	class SDeveloper extends Developer {
-		Card card = null;
-		Integer remainingWork = 0;
-
-		SDeveloper(JsonObject developerJson) {
-			super();
-			id = developerJson.get("id").getAsInt();
-			velocity = developerJson.get("velocity").getAsInt();
-			lift = developerJson.get("lift").getAsInt();
-			drag = developerJson.get("drag").getAsInt();
-		}
-
-		void work() {
-			remainingWork -= 1;
-		}
-
-		void workOn(Card card) {
-			this.card = card;
-			this.remainingWork = card.size;
-		}
-
-		boolean isAvailable() {
-			return remainingWork <= 0;
-		}
-
-		@Override
-		public String toString() {
-			return new StringBuilder("Dev ").append(id).append("(").append(remainingWork).append(")").toString();
-		}
-
-		public boolean isDone() {
-			return remainingWork <= 0;
-		}
-
-		public boolean isWorking() {
-			return !isAvailable();
-		}
-	}
-
-	void runSprint() {
+	public void runSprint() {
 		loadCards();
 		loadDevelopers();
 
@@ -116,7 +64,7 @@ class SprintRunner {
 	}
 
 	private void workACard(SDeveloper developer) {
-		log(developer + " will work on " + developer.card);
+		log(developer + " will work on " + developer.getAssignedCard());
 		developer.work();
 		if (developer.isDone()) {
 			moveCardToDone(developer);
@@ -130,18 +78,18 @@ class SprintRunner {
 	}
 
 	private void checkCardForDefects(SDeveloper developer) {
-		if (developer.card.shouldCreateDefect) {
-			defectsCreated.add(new Defect(developer.card));
-			log(developer + " introduced a defect in " + developer.card);
+		if (developer.getAssignedCard().shouldCreateDefect) {
+			defectsCreated.add(new Defect(developer.getAssignedCard()));
+			log(developer + " introduced a defect in " + developer.getAssignedCard());
 		}
 	}
 
 	private void moveCardToDone(SDeveloper developer) {
-		notDone.remove(developer.card);
-		done.add(developer.card);
-		done.remove(developer.card);
-		verified.add(developer.card);
-		log(developer + " finished " + developer.card);
+		notDone.remove(developer.getAssignedCard());
+		done.add(developer.getAssignedCard());
+		done.remove(developer.getAssignedCard());
+		verified.add(developer.getAssignedCard());
+		log(developer + " finished " + developer.getAssignedCard());
 	}
 
 	private void assignCards() {
@@ -149,7 +97,7 @@ class SprintRunner {
 			if (developer.isAvailable()) {
 				assignCardTo(developer);
 			} else {
-				log(developer + " is not available [" + developer.card + "]");
+				log(developer + " is not available [" + developer.getAssignedCard() + "]");
 			}
 		}
 	}
@@ -182,3 +130,65 @@ class SprintRunner {
 		}
 	}
 }
+
+class SCard extends Card {
+	public SCard(JsonObject cardJson) {
+		super(Card.Size.forInt(cardJson.get("size").getAsInt()));
+		this.id = cardJson.get("id").getAsInt();
+		this.shouldCreateDefect = cardJson.get("shouldCreateDefect").getAsBoolean();
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder("Card ").append(id).append("(").append(size).append(")").toString();
+	}
+}
+
+class SDeveloper extends Developer {
+
+	private Card assignedCard = null;
+	private Integer remainingWork = 0;
+
+	public SDeveloper(JsonObject developerJson) {
+		super();
+		id = developerJson.get("id").getAsInt();
+		velocity = developerJson.get("velocity").getAsInt();
+		lift = developerJson.get("lift").getAsInt();
+		drag = developerJson.get("drag").getAsInt();
+	}
+
+	public Card getAssignedCard() {
+		return assignedCard;
+	}
+
+	public Integer getRemainingWork() {
+		return remainingWork;
+	}
+
+	public void work() {
+		remainingWork -= 1;
+	}
+
+	public void workOn(Card card) {
+		this.assignedCard = card;
+		this.remainingWork = card.size;
+	}
+
+	public boolean isAvailable() {
+		return remainingWork <= 0;
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder("Dev ").append(id).append("(").append(remainingWork).append(")").toString();
+	}
+
+	public boolean isDone() {
+		return remainingWork <= 0;
+	}
+
+	public boolean isWorking() {
+		return !isAvailable();
+	}
+}
+

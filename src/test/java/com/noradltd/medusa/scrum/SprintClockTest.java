@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 public class SprintClockTest {
-	private SprintClock clock = new SprintClock();;
+	private final SprintClock clock = new SprintClock();;
 
 	private void run(InputStream stream) {
 		clock.setStream(stream);

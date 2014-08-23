@@ -8,6 +8,8 @@
 	<description>The Scrum Team Scenario Processor</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 	<build>
 		<plugins>
@@ -38,7 +40,6 @@
 							<resources>
 								<resource>
 									<directory>src/acceptancetest/resources</directory>
-									<!-- <targetPath>acceptancetest</targetPath> -->
 								</resource>
 							</resources>
 						</configuration>
@@ -67,6 +68,16 @@
 			</plugin>
 		</plugins>
 	</build>
+<!-- Emma Is Not Working :-(
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>emma-maven-plugin</artifactId>
+				<version>1.0-alpha-3</version>
+			</plugin>
+		</plugins>
+	</reporting> -->
 	<dependencies>
 		<!-- all -->
 		<dependency>

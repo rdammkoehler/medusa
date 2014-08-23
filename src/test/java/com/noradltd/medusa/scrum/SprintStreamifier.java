@@ -5,7 +5,10 @@ import java.io.InputStream;
 
 import com.google.gson.GsonBuilder;
 
-public class SprintStreamifier {
+public abstract class SprintStreamifier {
+	
+	private SprintStreamifier() {}
+	
 	public static final InputStream sprintToStream(Sprint... sprints) {
 		return new ByteArrayInputStream(new GsonBuilder().create().toJson(sprints).getBytes());
 	}

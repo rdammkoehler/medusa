@@ -22,6 +22,7 @@ public class RunSprintSteps {
 
 	public RunSprintSteps() {
 		sprintClock.addResultListener(new SprintResultListener() {
+			@Override
 			public void sprintComplete(SprintResult result) {
 				sprintResult = result;
 			}

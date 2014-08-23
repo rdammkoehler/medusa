@@ -15,16 +15,21 @@ public class Card implements Comparable<Card> {
 		}
 
 		public static Size forInt(Integer scalarSize) {
+			Size size = MEDIUM;
 			switch (scalarSize) {
 			case 1:
-				return SMALL;
+				size = SMALL;
+				break;
 			case 3:
-				return MEDIUM;
+				size = MEDIUM;
+				break;
 			case 5:
-				return LARGE;
+				size = LARGE;
+				break;
 			default:
 				throw new RuntimeException("Unknown Size Scalar: " + scalarSize);
 			}
+			return size;
 		}
 	}
 
@@ -59,19 +64,24 @@ public class Card implements Comparable<Card> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Card other = (Card) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
+		boolean equals = true;
+		if (this == obj) {
+			equals = true;
+		} else if (obj == null) {
+			equals = false;
+		} else if (getClass() != obj.getClass()) {
+			equals = false;
+		} else {
+			Card other = (Card) obj;
+			if (id == null) {
+				if (other.id != null) {
+					equals = false;
+				}
+			} else if (!id.equals(other.id)) {
+				equals = false;
+			}
+		}
+		return equals;
 	}
 
 }

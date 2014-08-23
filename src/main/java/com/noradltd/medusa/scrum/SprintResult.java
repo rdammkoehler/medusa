@@ -5,11 +5,11 @@ import java.util.Set;
 
 class SprintResult {
 	private String originalSprintData;
-	private Set<Card> verified = new HashSet<Card>();
-	private Set<Card> done = new HashSet<Card>();
-	private Set<Card> notDone = new HashSet<Card>();
-	private Set<Card> notStarted = new HashSet<Card>();
-	private Set<Defect> defectsCreated = new HashSet<Defect>();
+	private final Set<Card> verified = new HashSet<Card>();
+	private final Set<Card> done = new HashSet<Card>();
+	private final Set<Card> notDone = new HashSet<Card>();
+	private final Set<Card> notStarted = new HashSet<Card>();
+	private final Set<Defect> defectsCreated = new HashSet<Defect>();
 	private Integer developerIdleDays = 0;
 
 	public Integer getDeveloperIdleDays() {
