@@ -1,7 +1,6 @@
 package com.noradltd.medusa.scrum;
 
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.google.gson.JsonArray;
@@ -11,30 +10,14 @@ import com.google.gson.JsonObject;
 class SprintRunner {
 	private final JsonObject sprint;
 	private final SprintResult sprintResult;
-	private final Set<Card> notStarted;
-	private final Set<Card> notDone;
-	private final Set<Card> done;
-	private final Set<Card> verified;
-	private final Set<Defect> defectsCreated;
 	private final Set<SDeveloper> developers;
 	private final Set<SprintResultListener> resultListeners = new HashSet<SprintResultListener>();
-
-	@Deprecated
-	private void log(String message) {
-		// diag method while I'm messing around
-		System.out.println(message);
-	}
 
 	public SprintRunner(JsonObject sprint, Set<SprintResultListener> resultListeners) {
 		this.sprint = sprint;
 		this.resultListeners.addAll(resultListeners);
 		sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(sprint.toString());
-		notStarted = sprintResult.getNotStarted();
-		notDone = sprintResult.getNotDone();
-		done = sprintResult.getDone();
-		verified = sprintResult.getVerified();
-		defectsCreated = sprintResult.getDefectsCreated();
 		developers = new HashSet<SDeveloper>();
 	}
 
@@ -44,8 +27,7 @@ class SprintRunner {
 
 		final int days = sprint.get("days").getAsInt();
 		for (int day = 0; day < days; day++) {
-			log("Day " + day + ": " + sprintResult);
-			assignCards();
+			new CardAssigner(sprintResult, developers).assignCards();
 			doADaysWork();
 		}
 		for (SprintResultListener listener : resultListeners) {
@@ -58,59 +40,20 @@ class SprintRunner {
 			if (developer.isWorking()) {
 				workACard(developer);
 			} else {
-				recordSlackTime(developer);
+				recordSlackTime();
 			}
 		}
 	}
 
 	private void workACard(SDeveloper developer) {
-		log(developer + " will work on " + developer.getAssignedCard());
 		developer.work();
 		if (developer.isDone()) {
-			moveCardToDone(developer);
-			checkCardForDefects(developer);
+			new CardCompleter(sprintResult, developer.getAssignedCard()).moveCardToDone();
 		}
 	}
 
-	private void recordSlackTime(SDeveloper developer) {
-		log(developer + " is idle");
+	private void recordSlackTime() {
 		sprintResult.incDeveloperIdleDays();
-	}
-
-	private void checkCardForDefects(SDeveloper developer) {
-		if (developer.getAssignedCard().shouldCreateDefect) {
-			defectsCreated.add(new Defect(developer.getAssignedCard()));
-			log(developer + " introduced a defect in " + developer.getAssignedCard());
-		}
-	}
-
-	private void moveCardToDone(SDeveloper developer) {
-		notDone.remove(developer.getAssignedCard());
-		done.add(developer.getAssignedCard());
-		done.remove(developer.getAssignedCard());
-		verified.add(developer.getAssignedCard());
-		log(developer + " finished " + developer.getAssignedCard());
-	}
-
-	private void assignCards() {
-		for (SDeveloper developer : developers) {
-			if (developer.isAvailable()) {
-				assignCardTo(developer);
-			} else {
-				log(developer + " is not available [" + developer.getAssignedCard() + "]");
-			}
-		}
-	}
-
-	private void assignCardTo(SDeveloper developer) {
-		try {
-			Card card = notStarted.iterator().next();
-			notStarted.remove(card);
-			notDone.add(card);
-			developer.workOn(card);
-		} catch (NoSuchElementException nsee) {
-			log("out of cards");
-		}
 	}
 
 	private void loadDevelopers() {
@@ -125,8 +68,9 @@ class SprintRunner {
 
 	private void loadCards() {
 		JsonArray cardsJson = sprint.getAsJsonArray("cards");
-		for (int cardIdx = 0; cardIdx < cardsJson.size(); cardIdx++) {
-			notStarted.add(new SCard(cardsJson.get(cardIdx).getAsJsonObject()));
+		int size = cardsJson.size();
+		for (int cardIdx = 0; cardIdx < size; cardIdx++) {
+			sprintResult.getNotStarted().add(new SCard(cardsJson.get(cardIdx).getAsJsonObject()));
 		}
 	}
 }
