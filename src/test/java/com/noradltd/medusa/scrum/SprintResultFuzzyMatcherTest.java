@@ -1,9 +1,13 @@
 package com.noradltd.medusa.scrum;
 
+import static org.junit.Assert.assertThat;
+import static com.noradltd.medusa.scrum.SprintResultFuzzyMatcher.fuzzyMatchesSprintResults;
 import static com.noradltd.medusa.scrum.SprintResultFuzzyMatcher.isLike;
 import static org.hamcrest.Matchers.not;
 
 import org.junit.Test;
+
+import com.noradltd.medusa.scrum.SprintResultFuzzyMatcher.FuzzySprintResult;
 
 public class SprintResultFuzzyMatcherTest {
 
@@ -17,9 +21,8 @@ public class SprintResultFuzzyMatcherTest {
 		sprintResult.getVerified().add(CARD);
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		FuzzySprintResult fsr = FuzzySprintResult.Builder().withOriginalSprintData(DATA)
-				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2).build();
-		org.junit.Assert.assertThat(sprintResult, isLike(fsr));
+		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
+				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2).build2());
 	}
 
 	@Test
@@ -27,9 +30,8 @@ public class SprintResultFuzzyMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA + DATA);
 		sprintResult.getNotDone().add(CARD);
-		FuzzySprintResult fsr = FuzzySprintResult.Builder().withOriginalSprintData(DATA)
-				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2).build();
-		org.junit.Assert.assertThat(sprintResult, not(isLike(fsr)));
+		assertThat(sprintResult, not(fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
+				 .whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2).build2()));
 	}
 
 	@Test
@@ -39,17 +41,15 @@ public class SprintResultFuzzyMatcherTest {
 		sprintResult.getVerified().add(CARD);
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		FuzzySprintResult fsr = FuzzySprintResult.Builder().withOriginalSprintData(DATA)
-				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAreBetween(1, 5).build();
-		org.junit.Assert.assertThat(sprintResult, isLike(fsr));
+		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
+				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAreBetween(1, 5).build2());
 	}
-	
+
 	@Test
 	public void isntFuzzy() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA);
-		FuzzySprintResult fsr = FuzzySprintResult.Builder().withOriginalSprintData(DATA)
-				.whereVerifiedCardsDoesNotContain(CARD).build();
-		org.junit.Assert.assertThat(sprintResult, isLike(fsr));
+		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
+				.whereVerifiedCardsDoesNotContain(CARD).build2());
 	}
 }
