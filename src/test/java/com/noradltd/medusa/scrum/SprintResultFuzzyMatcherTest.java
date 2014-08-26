@@ -2,12 +2,9 @@ package com.noradltd.medusa.scrum;
 
 import static org.junit.Assert.assertThat;
 import static com.noradltd.medusa.scrum.SprintResultFuzzyMatcher.fuzzyMatchesSprintResults;
-import static com.noradltd.medusa.scrum.SprintResultFuzzyMatcher.isLike;
 import static org.hamcrest.Matchers.not;
 
 import org.junit.Test;
-
-import com.noradltd.medusa.scrum.SprintResultFuzzyMatcher.FuzzySprintResult;
 
 public class SprintResultFuzzyMatcherTest {
 
@@ -22,7 +19,7 @@ public class SprintResultFuzzyMatcherTest {
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
 		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
-				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2).build2());
+				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2));
 	}
 
 	@Test
@@ -31,7 +28,7 @@ public class SprintResultFuzzyMatcherTest {
 		sprintResult.setOriginalSprintData(DATA + DATA);
 		sprintResult.getNotDone().add(CARD);
 		assertThat(sprintResult, not(fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
-				 .whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2).build2()));
+				 .whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2)));
 	}
 
 	@Test
@@ -42,7 +39,7 @@ public class SprintResultFuzzyMatcherTest {
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
 		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
-				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAreBetween(1, 5).build2());
+				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAreBetween(1, 5));
 	}
 
 	@Test
@@ -50,6 +47,6 @@ public class SprintResultFuzzyMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA);
 		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
-				.whereVerifiedCardsDoesNotContain(CARD).build2());
+				.whereVerifiedCardsDoesNotContain(CARD));
 	}
 }
