@@ -1,5 +1,6 @@
 package com.noradltd.medusa.scrum;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,8 +21,7 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 	private final Set<Card> notStarted = new HashSet<Card>();
 	private final Set<Defect> defectsCreated = new HashSet<Defect>();
 	private Integer developerIdleDays, minimumDeveloperIdleDays, maximumDeveloperIdleDays;
-	
-	
+
 	@Factory
 	public static SprintResultFuzzyMatcher fuzzyMatchesSprintResults() {
 		return new SprintResultFuzzyMatcher();
@@ -33,8 +33,19 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 	}
 
 	@Override
-	protected boolean matchesSafely(SprintResult item) {
-		return match(item);
+	protected boolean matchesSafely(SprintResult sprintResult) {
+		boolean match = true;
+		match &= originalSprintData == null || originalSprintData.equals(sprintResult.getOriginalSprintData());
+		if (fuzzyMatch.isEmpty() && fuzzySearchFlags.isEmpty() && dontFindFlags.isEmpty()) {
+			match &= exactMatch(sprintResult);
+		} else {
+			if (dontFindFlags.isEmpty()) {
+				match &= fuzzyMatch(sprintResult);
+			} else {
+				match &= fuzzyInverseMatch(sprintResult);
+			}
+		}
+		return match;
 	}
 
 	private enum FieldFlags {
@@ -45,7 +56,6 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 		this.setOriginalSprintData(originalSprintData);
 		return this;
 	}
-
 
 	public SprintResultFuzzyMatcher withVerifiedCards(Set<Card> verified) {
 		if (preventVerifiedListAblation) {
@@ -99,52 +109,58 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 		return this;
 	}
 
-
-	public boolean match(SprintResult sprintResult) {
+	private boolean fuzzyInverseMatch(SprintResult sprintResult) {
 		boolean match = true;
-		match &= originalSprintData == null || originalSprintData.equals(sprintResult.getOriginalSprintData());
-		if (fuzzyMatch.isEmpty() && fuzzySearchFlags.isEmpty() && dontFindFlags.isEmpty()) {
-			match &= verified == null || verified.containsAll(sprintResult.getVerified());
-			match &= done == null || done.containsAll(sprintResult.getDone());
-			match &= notDone == null || notDone.containsAll(sprintResult.getNotDone());
-			match &= notStarted == null || notStarted.containsAll(sprintResult.getNotStarted());
-			match &= defectsCreated == null || notStarted.containsAll(sprintResult.getDefectsCreated());
-			match &= developerIdleDays == null || developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
-		} else {
-			if (dontFindFlags.isEmpty()) {
-				match &= verified == null || sprintResult.getVerified().containsAll(verified);
-				match &= done == null || sprintResult.getDone().containsAll(done);
-				match &= notDone == null || sprintResult.getNotDone().containsAll(notDone);
-				match &= notStarted == null || sprintResult.getNotStarted().containsAll(notStarted);
-				match &= defectsCreated == null || sprintResult.getDefectsCreated().containsAll(notStarted);
-				if (fuzzyMatch.contains(FieldFlags.DEVELOPER_IDLE_DAYS_FIELD)) {
-					match &= developerIdleDays == null
-							|| (sprintResult.getDeveloperIdleDays() >= minimumDeveloperIdleDays && sprintResult
-									.getDeveloperIdleDays() <= maximumDeveloperIdleDays);
-				}
-			} else {
-				// ugg, linear search
-				for (Set<Card> set : fuzzySearchFlags) {
-					if (verified == set) {
-						match &= doesNotContain(sprintResult.getVerified(), set);
-					}
-					if (done == set) {
-						match &= doesNotContain(sprintResult.getDone(), set);
-					}
-					if (notDone == set) {
-						match &= doesNotContain(sprintResult.getNotDone(), set);
-					}
-					if (notStarted == set) {
-						match &= doesNotContain(sprintResult.getNotStarted(), set);
-					}
-					// if ( defectsCreated == set) {
-					// match &= doesNotContain(sprintResult.getDefectsCreated(),
-					// set);
-					// }
-				}
-				match &= developerIdleDays == null || !developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
+		// ugg, linear search
+		for (Set<Card> set : fuzzySearchFlags) {
+			if (verified.equals(set)) {
+				match &= doesNotContain(sprintResult.getVerified(), set);
 			}
+			if (done.equals(set)) {
+				match &= doesNotContain(sprintResult.getDone(), set);
+			}
+			if (notDone.equals(set)) {
+				match &= doesNotContain(sprintResult.getNotDone(), set);
+			}
+			if (notStarted.equals(set)) {
+				match &= doesNotContain(sprintResult.getNotStarted(), set);
+			}
+			// if ( defectsCreated == set) {
+			// match &= doesNotContain(sprintResult.getDefectsCreated(),
+			// set);
+			// }
 		}
+		match &= developerIdleDays == null || !developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
+		return match;
+	}
+
+	private boolean containsAll(Collection<?> a, Collection<?> b) {
+		return a.containsAll(b);
+	}
+
+	private boolean fuzzyMatch(SprintResult sprintResult) {
+		boolean match = true;
+		match &= verified == null || containsAll(sprintResult.getVerified(), verified);
+		match &= done == null || containsAll(sprintResult.getDone(), done);
+		match &= notDone == null || containsAll(sprintResult.getNotDone(), notDone);
+		match &= notStarted == null || containsAll(sprintResult.getNotStarted(), notStarted);
+		match &= defectsCreated == null || containsAll(sprintResult.getDefectsCreated(), defectsCreated);
+		if (fuzzyMatch.contains(FieldFlags.DEVELOPER_IDLE_DAYS_FIELD)) {
+			match &= developerIdleDays == null
+					|| (sprintResult.getDeveloperIdleDays() >= minimumDeveloperIdleDays && sprintResult
+							.getDeveloperIdleDays() <= maximumDeveloperIdleDays);
+		}
+		return match;
+	}
+
+	private boolean exactMatch(SprintResult sprintResult) {
+		boolean match = true;
+		match &= verified == null || containsAll(verified, sprintResult.getVerified());
+		match &= done == null || containsAll(done, sprintResult.getDone());
+		match &= notDone == null || containsAll(notDone, sprintResult.getNotDone());
+		match &= notStarted == null || containsAll(notStarted, sprintResult.getNotStarted());
+		match &= defectsCreated == null || containsAll(notStarted, sprintResult.getDefectsCreated());
+		match &= developerIdleDays == null || developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
 		return match;
 	}
 

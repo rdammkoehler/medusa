@@ -12,16 +12,16 @@ public class CardCompleter {
 	}
 
 	public void moveCardToDone() {
-		sprintResult.getNotDone().remove(assignedCard);
-		sprintResult.getDone().add(assignedCard);
-		sprintResult.getDone().remove(assignedCard);
-		sprintResult.getVerified().add(assignedCard);
+		sprintResult.removeNotDone(assignedCard);
+		sprintResult.addDone(assignedCard);
+		sprintResult.removeDone(assignedCard);
+		sprintResult.addVerified(assignedCard);
 		checkCardForDefects();
 	}
 	
 	private void checkCardForDefects() {
 		if (assignedCard.shouldCreateDefect) {
-			sprintResult.getDefectsCreated().add(new Defect(assignedCard));
+			sprintResult.addDefect(new Defect(assignedCard));
 		}
 	}
 }

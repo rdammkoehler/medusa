@@ -70,7 +70,7 @@ class SprintRunner {
 		JsonArray cardsJson = sprint.getAsJsonArray("cards");
 		int size = cardsJson.size();
 		for (int cardIdx = 0; cardIdx < size; cardIdx++) {
-			sprintResult.getNotStarted().add(new SCard(cardsJson.get(cardIdx).getAsJsonObject()));
+			sprintResult.addNotStarted(new SCard(cardsJson.get(cardIdx).getAsJsonObject()));
 		}
 	}
 }

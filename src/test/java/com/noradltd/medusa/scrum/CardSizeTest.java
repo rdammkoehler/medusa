@@ -5,31 +5,33 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import com.noradltd.medusa.scrum.Card.Size;
+
 public class CardSizeTest {
 
 	@Test
 	public void smallIsOnePoint() {
-		assertThat(Card.Size.forInt(1), is(Card.Size.SMALL));
+		assertThat(Size.forInt(1), is(Size.SMALL));
 	}
 
 	@Test
 	public void mediumIsThreePoints() {
-		assertThat(Card.Size.forInt(3), is(Card.Size.MEDIUM));
+		assertThat(Size.forInt(3), is(Size.MEDIUM));
 	}
 
 	@Test
 	public void largeIsFivePoints() {
-		assertThat(Card.Size.forInt(5), is(Card.Size.LARGE));
+		assertThat(Size.forInt(5), is(Size.LARGE));
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void zeroIsntASize() {
-		Card.Size.forInt(0);
+		Size.forInt(0);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void twoIsntASize() {
-		Card.Size.forInt(2);
+		Size.forInt(2);
 	}
 	
 }

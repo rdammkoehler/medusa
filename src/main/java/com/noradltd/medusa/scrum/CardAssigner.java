@@ -23,16 +23,12 @@ public class CardAssigner {
 	}
 
 	private void assignCardTo(SDeveloper developer) {
-		try {
-			Set<Card> notStarted = sprintResult.getNotStarted();
-			Iterator<Card> notStartedItr = notStarted.iterator();
+		if (sprintResult.hasUnstartedCards()) {
+			Iterator<Card> notStartedItr = sprintResult.getNotStartedIterator();
 			Card card = notStartedItr.next();
-			notStarted.remove(card);
-			Set<Card> notDone = sprintResult.getNotDone();
-			notDone.add(card);
+			sprintResult.removeNotStarted(card);
+			sprintResult.addNotDone(card);
 			developer.workOn(card);
-		} catch (NoSuchElementException nsee) {
-			//no-op
 		}
 	}
 
