@@ -15,7 +15,7 @@ class Sprint {
 	}
 	
 	public boolean addCards(Collection<Card> cards) {
-		return cards.addAll(cards);
+		return this.cards.addAll(cards);
 	}
 	
 	public boolean addDefect(Defect defect) {
@@ -23,6 +23,6 @@ class Sprint {
 	}
 	
 	public boolean addDefects(Collection<Defect> defects) {
-		return defects.addAll(defects);
+		return this.defects.addAll(defects);
 	}
 }
