@@ -97,16 +97,16 @@ class SprintResult {
 		return defectsCreated.remove(defect);
 	}
 	
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Results, verified ").append(verified);
-		sb.append(", done ").append(done);
-		sb.append(", notDone ").append(notDone);
-		sb.append(", notStarted ").append(notStarted);
-		sb.append(", defectsCreated ").append(defectsCreated);
-		sb.append(", developerIdleDays ").append(developerIdleDays);
-		sb.append(", originalSprintData ").append(originalSprintData);
-		return sb.toString();
-	}
+//	@Override
+//	public String toString() {
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("Results, verified ").append(verified);
+//		sb.append(", done ").append(done);
+//		sb.append(", notDone ").append(notDone);
+//		sb.append(", notStarted ").append(notStarted);
+//		sb.append(", defectsCreated ").append(defectsCreated);
+//		sb.append(", developerIdleDays ").append(developerIdleDays);
+//		sb.append(", originalSprintData ").append(originalSprintData);
+//		return sb.toString();
+//	}
 }
