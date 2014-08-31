@@ -48,15 +48,17 @@ public abstract class SprintBuilder {
 	}
 
 	public static final Sprint addDefectsTo(Sprint sprint, Integer defectCount) {
-		Card[] array = sprint.cards.toArray(new Card[] {});
-		List<Card> list = Arrays.asList(array);
-		Collections.shuffle(list);
-		Iterator<Card> cardItr = list.iterator();
-		Card currentCard = cardItr.next();
-		for (int ct = 0; ct < defectCount; ct++) {
-			currentCard.shouldCreateDefect = true;
-			currentCard.defectImpactRelativeToOriginalSize = 1.0f;
-			currentCard = cardItr.next();
+		if (!sprint.cards.isEmpty()) {
+			Card[] array = sprint.cards.toArray(new Card[] {});
+			List<Card> list = Arrays.asList(array);
+			Collections.shuffle(list);
+			Iterator<Card> cardItr = list.iterator();
+			Card currentCard = cardItr.next();
+			for (int ct = 0; ct < defectCount; ct++) {
+				currentCard.shouldCreateDefect = true;
+				currentCard.defectImpactRelativeToOriginalSize = 1.0f;
+				currentCard = cardItr.next();
+			}
 		}
 		return sprint;
 	}
