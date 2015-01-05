@@ -1,7 +1,6 @@
 package com.noradltd.medusa.scrum;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class CardAssigner {

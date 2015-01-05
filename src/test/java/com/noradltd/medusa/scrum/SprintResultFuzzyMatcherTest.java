@@ -15,7 +15,7 @@ public class SprintResultFuzzyMatcherTest {
 	public void itsExact() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA);
-		sprintResult.getVerified().add(CARD);
+		sprintResult.addVerified(CARD);
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
 		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
@@ -26,7 +26,7 @@ public class SprintResultFuzzyMatcherTest {
 	public void itsNotExact() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA + DATA);
-		sprintResult.getNotDone().add(CARD);
+		sprintResult.addNotDone(CARD);
 		assertThat(sprintResult, not(fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
 				 .whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2)));
 	}
@@ -35,7 +35,7 @@ public class SprintResultFuzzyMatcherTest {
 	public void itsFuzzy() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA);
-		sprintResult.getVerified().add(CARD);
+		sprintResult.addVerified(CARD);
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
 		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)

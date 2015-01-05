@@ -10,17 +10,58 @@ import org.hamcrest.TypeSafeMatcher;
 
 public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult> {
 
-	private boolean preventVerifiedListAblation = false;
-	private final Set<FieldFlags> fuzzyMatch = new HashSet<FieldFlags>();
-	private final Set<Set<Card>> fuzzySearchFlags = new HashSet<Set<Card>>();
-	private final Set<Set<Card>> dontFindFlags = new HashSet<Set<Card>>();
-	private String originalSprintData;
-	private final Set<Card> verified = new HashSet<Card>();
-	private final Set<Card> done = new HashSet<Card>();
-	private final Set<Card> notDone = new HashSet<Card>();
-	private final Set<Card> notStarted = new HashSet<Card>();
-	private final Set<Defect> defectsCreated = new HashSet<Defect>();
-	private Integer developerIdleDays, minimumDeveloperIdleDays, maximumDeveloperIdleDays;
+	private final MatchData matchData = new MatchData();
+
+	class MatchData {
+		boolean preventVerifiedListAblation = false;
+		final Set<FieldFlags> fuzzyMatch = new HashSet<FieldFlags>();
+		final Set<Set<Card>> fuzzySearchFlags = new HashSet<Set<Card>>();
+		final Set<Set<Card>> dontFindFlags = new HashSet<Set<Card>>();
+		String originalSprintData;
+		final Set<Card> verified = new HashSet<Card>();
+		final Set<Card> done = new HashSet<Card>();
+		final Set<Card> notDone = new HashSet<Card>();
+		final Set<Card> notStarted = new HashSet<Card>();
+		final Set<Defect> defectsCreated = new HashSet<Defect>();
+		Integer developerIdleDays, minimumDeveloperIdleDays, maximumDeveloperIdleDays;
+
+		private boolean isFuzzyMatchRequest() {
+			return dontFindFlags.isEmpty();
+		}
+
+		private boolean isExactMatchRequest() {
+			return fuzzyMatch.isEmpty() && fuzzySearchFlags.isEmpty() && dontFindFlags.isEmpty();
+		}
+
+		public boolean match(SprintResult sprintResult) {
+			boolean match = true;
+			match &= initializedByTheSameSprintData(sprintResult);
+			if (isExactMatchRequest()) {
+				match &= exactMatch(sprintResult);
+			} else if (isFuzzyMatchRequest()) {
+				match &= fuzzyMatch(sprintResult);
+			} else {
+				match &= fuzzyInverseMatch(sprintResult);
+			}
+			return match;
+		}
+
+		private boolean initializedByTheSameSprintData(SprintResult sprintResult) {
+			return originalSprintData == null || originalSprintData.equals(sprintResult.getOriginalSprintData());
+		}
+
+		public void addFuzzySearchFlags(Set<Card> flag) {
+			fuzzySearchFlags.add(flag);
+		}
+
+		public void addFuzzyMatch(FieldFlags fieldFlag) {
+			fuzzyMatch.add(fieldFlag);
+		}
+
+		public void addDontFindFlags(Set<Card> flag) {
+			dontFindFlags.add(flag);
+		}
+	}
 
 	@Factory
 	public static SprintResultFuzzyMatcher fuzzyMatchesSprintResults() {
@@ -34,18 +75,7 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 
 	@Override
 	protected boolean matchesSafely(SprintResult sprintResult) {
-		boolean match = true;
-		match &= originalSprintData == null || originalSprintData.equals(sprintResult.getOriginalSprintData());
-		if (fuzzyMatch.isEmpty() && fuzzySearchFlags.isEmpty() && dontFindFlags.isEmpty()) {
-			match &= exactMatch(sprintResult);
-		} else {
-			if (dontFindFlags.isEmpty()) {
-				match &= fuzzyMatch(sprintResult);
-			} else {
-				match &= fuzzyInverseMatch(sprintResult);
-			}
-		}
-		return match;
+		return matchData.match(sprintResult);
 	}
 
 	private enum FieldFlags {
@@ -53,76 +83,105 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 	}
 
 	public SprintResultFuzzyMatcher withOriginalSprintData(String originalSprintData) {
-		this.setOriginalSprintData(originalSprintData);
+		matchData.originalSprintData = originalSprintData;
 		return this;
 	}
 
-	public SprintResultFuzzyMatcher withVerifiedCards(Set<Card> verified) {
-		if (preventVerifiedListAblation) {
+	public SprintResultFuzzyMatcher withVerifiedCardsMatch(Set<Card> verified) {
+		if (matchData.preventVerifiedListAblation) {
 			System.err.println("You can only modify the Verified Card Set matcher once");
 		} else {
-			this.getVerified().addAll(verified);
+			matchData.verified.addAll(verified);
 		}
 		return this;
 	}
 
 	public SprintResultFuzzyMatcher whereVerifiedCardsContains(Card verifiedCard) {
-		if (preventVerifiedListAblation) {
+		if (matchData.preventVerifiedListAblation) {
 			System.err.println("You can only modify the Verified Card Set matcher once");
 		} else {
-			this.setFuzzySearch(this.getVerified());
-			this.getVerified().add(verifiedCard);
+			matchData.addFuzzySearchFlags(matchData.verified);
+			matchData.verified.add(verifiedCard);
 		}
 		return this;
 	}
 
 	public SprintResultFuzzyMatcher whereVerifiedCardsContains(Set<Card> verifiedCards) {
-		if (preventVerifiedListAblation) {
+		if (matchData.preventVerifiedListAblation) {
 			System.err.println("You can only modify the Verified Card Set matcher once");
 		} else {
-			this.setFuzzySearch(this.getVerified());
-			this.getVerified().addAll(verifiedCards);
+			matchData.addFuzzySearchFlags(matchData.verified);
+			matchData.verified.addAll(verifiedCards);
 		}
 		return this;
 	}
 
 	public SprintResultFuzzyMatcher whereVerifiedCardsDoesNotContain(Card card) {
-		if (preventVerifiedListAblation) {
+		if (matchData.preventVerifiedListAblation) {
 			System.err.println("You can only modify the Verified Card Set matcher once");
 		} else {
-			this.setFuzzySearch(this.getVerified());
-			this.setDontFind(this.getVerified());
-			this.getVerified().add(card);
+			matchData.addFuzzySearchFlags(matchData.verified);
+			matchData.addDontFindFlags(matchData.verified);
+			matchData.verified.add(card);
 		}
 		return this;
 	}
 
 	public SprintResultFuzzyMatcher whereDeveloperIdleDaysAre(Integer idleDays) {
-		this.setDeveloperIdleDays(idleDays);
+		matchData.developerIdleDays = idleDays;
 		return this;
 	}
 
 	public SprintResultFuzzyMatcher whereDeveloperIdleDaysAreBetween(Integer lowerLimit, Integer upperLimit) {
-		this.addFuzzyMatch(FieldFlags.DEVELOPER_IDLE_DAYS_FIELD);
-		this.setMinimumDeveloperIdleDays(lowerLimit);
-		this.setMaximumDeveloperIdleDays(upperLimit);
+		matchData.addFuzzyMatch(FieldFlags.DEVELOPER_IDLE_DAYS_FIELD);
+		matchData.minimumDeveloperIdleDays = lowerLimit;
+		matchData.maximumDeveloperIdleDays = upperLimit;
 		return this;
+	}
+
+	private boolean exactMatch(SprintResult sprintResult) {
+		boolean match = true;
+		match &= matchData.verified == null || containsAll(matchData.verified, sprintResult.getVerified());
+		match &= matchData.done == null || containsAll(matchData.done, sprintResult.getDone());
+		match &= matchData.notDone == null || containsAll(matchData.notDone, sprintResult.getNotDone());
+		match &= matchData.notStarted == null || containsAll(matchData.notStarted, sprintResult.getNotStarted());
+		match &= matchData.defectsCreated == null
+				|| containsAll(matchData.notStarted, sprintResult.getDefectsCreated());
+		match &= matchData.developerIdleDays == null
+				|| matchData.developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
+		return match;
+	}
+
+	private boolean fuzzyMatch(SprintResult sprintResult) {
+		boolean match = true;
+		match &= matchData.verified == null || containsAll(sprintResult.getVerified(), matchData.verified);
+		match &= matchData.done == null || containsAll(sprintResult.getDone(), matchData.done);
+		match &= matchData.notDone == null || containsAll(sprintResult.getNotDone(), matchData.notDone);
+		match &= matchData.notStarted == null || containsAll(sprintResult.getNotStarted(), matchData.notStarted);
+		match &= matchData.defectsCreated == null
+				|| containsAll(sprintResult.getDefectsCreated(), matchData.defectsCreated);
+		if (matchData.fuzzyMatch.contains(FieldFlags.DEVELOPER_IDLE_DAYS_FIELD)) {
+			match &= matchData.developerIdleDays == null
+					|| (sprintResult.getDeveloperIdleDays() >= matchData.minimumDeveloperIdleDays && sprintResult
+							.getDeveloperIdleDays() <= matchData.maximumDeveloperIdleDays);
+		}
+		return match;
 	}
 
 	private boolean fuzzyInverseMatch(SprintResult sprintResult) {
 		boolean match = true;
 		// ugg, linear search
-		for (Set<Card> set : fuzzySearchFlags) {
-			if (verified.equals(set)) {
+		for (Set<Card> set : matchData.fuzzySearchFlags) {
+			if (matchData.verified == set) {
 				match &= doesNotContain(sprintResult.getVerified(), set);
 			}
-			if (done.equals(set)) {
+			if (matchData.done == set) {
 				match &= doesNotContain(sprintResult.getDone(), set);
 			}
-			if (notDone.equals(set)) {
+			if (matchData.notDone == set) {
 				match &= doesNotContain(sprintResult.getNotDone(), set);
 			}
-			if (notStarted.equals(set)) {
+			if (matchData.notStarted == set) {
 				match &= doesNotContain(sprintResult.getNotStarted(), set);
 			}
 			// if ( defectsCreated == set) {
@@ -130,38 +189,13 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 			// set);
 			// }
 		}
-		match &= developerIdleDays == null || !developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
+		match &= matchData.developerIdleDays == null
+				|| !matchData.developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
 		return match;
 	}
 
 	private boolean containsAll(Collection<?> a, Collection<?> b) {
 		return a.containsAll(b);
-	}
-
-	private boolean fuzzyMatch(SprintResult sprintResult) {
-		boolean match = true;
-		match &= verified == null || containsAll(sprintResult.getVerified(), verified);
-		match &= done == null || containsAll(sprintResult.getDone(), done);
-		match &= notDone == null || containsAll(sprintResult.getNotDone(), notDone);
-		match &= notStarted == null || containsAll(sprintResult.getNotStarted(), notStarted);
-		match &= defectsCreated == null || containsAll(sprintResult.getDefectsCreated(), defectsCreated);
-		if (fuzzyMatch.contains(FieldFlags.DEVELOPER_IDLE_DAYS_FIELD)) {
-			match &= developerIdleDays == null
-					|| (sprintResult.getDeveloperIdleDays() >= minimumDeveloperIdleDays && sprintResult
-							.getDeveloperIdleDays() <= maximumDeveloperIdleDays);
-		}
-		return match;
-	}
-
-	private boolean exactMatch(SprintResult sprintResult) {
-		boolean match = true;
-		match &= verified == null || containsAll(verified, sprintResult.getVerified());
-		match &= done == null || containsAll(done, sprintResult.getDone());
-		match &= notDone == null || containsAll(notDone, sprintResult.getNotDone());
-		match &= notStarted == null || containsAll(notStarted, sprintResult.getNotStarted());
-		match &= defectsCreated == null || containsAll(notStarted, sprintResult.getDefectsCreated());
-		match &= developerIdleDays == null || developerIdleDays.equals(sprintResult.getDeveloperIdleDays());
-		return match;
 	}
 
 	private boolean doesNotContain(Set<Card> resultSet, Set<Card> set) {
@@ -172,67 +206,4 @@ public final class SprintResultFuzzyMatcher extends TypeSafeMatcher<SprintResult
 		return match;
 	}
 
-	public void setFuzzySearch(Set<Card> verified) {
-		fuzzySearchFlags.add(verified);
-	}
-
-	public void addFuzzyMatch(FieldFlags fieldFlag) {
-		fuzzyMatch.add(fieldFlag);
-	}
-
-	public void setDontFind(Set<Card> verified) {
-		dontFindFlags.add(verified);
-	}
-
-	public String getOriginalSprintData() {
-		return originalSprintData;
-	}
-
-	public Set<Card> getVerified() {
-		return verified;
-	}
-
-	public Set<Card> getDone() {
-		return done;
-	}
-
-	public Set<Card> getNotDone() {
-		return notDone;
-	}
-
-	public Set<Card> getNotStarted() {
-		return notStarted;
-	}
-
-	public Set<Defect> getDefectsCreated() {
-		return defectsCreated;
-	}
-
-	public Integer getDeveloperIdleDays() {
-		return developerIdleDays;
-	}
-
-	protected void setOriginalSprintData(String originalSprintData) {
-		this.originalSprintData = originalSprintData;
-	}
-
-	protected void setDeveloperIdleDays(Integer developerIdleDays) {
-		this.developerIdleDays = developerIdleDays;
-	}
-
-	protected Integer getMinimumDeveloperIdleDays() {
-		return minimumDeveloperIdleDays;
-	}
-
-	protected void setMinimumDeveloperIdleDays(Integer minimumDeveloperIdleDays) {
-		this.minimumDeveloperIdleDays = minimumDeveloperIdleDays;
-	}
-
-	protected Integer getMaximumDeveloperIdleDays() {
-		return maximumDeveloperIdleDays;
-	}
-
-	protected void setMaximumDeveloperIdleDays(Integer maximumDeveloperIdleDays) {
-		this.maximumDeveloperIdleDays = maximumDeveloperIdleDays;
-	}
 }
