@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-class SprintResult {
+public class SprintResult {
 	private String originalSprintData;
 	private final Set<Card> verified = new HashSet<Card>();
 	private final Set<Card> done = new HashSet<Card>();

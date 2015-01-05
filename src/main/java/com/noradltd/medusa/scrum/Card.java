@@ -2,7 +2,7 @@ package com.noradltd.medusa.scrum;
 
 public class Card implements Comparable<Card> {
 
-	enum Size {
+	public enum Size {
 		SMALL(1), MEDIUM(3), LARGE(5);
 		private final Integer scalarSize;
 
