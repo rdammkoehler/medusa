@@ -44,6 +44,8 @@ public class SprintResultFuzzyMatcherTest {
 		sprintResult.incDeveloperIdleDays();
 		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
 				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAreBetween(1, 5));
+		//assertThat(sprintResult, new SprintResultBuilder().......match());
+		//assertThat(sprintResult, fuzzyMatch(newBuilder().with().with().with()));
 	}
 
 	@Test
