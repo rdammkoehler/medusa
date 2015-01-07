@@ -1,6 +1,6 @@
 package com.noradltd.medusa.scrum;
 
-import static com.noradltd.medusa.scrum.SprintResultMatcher.fuzzyMatchesSprintResults;
+import static com.noradltd.medusa.scrum.SprintResultMatcher.sprintResults;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
@@ -20,75 +20,75 @@ public class SprintResultMatcherTest {
 	public void originalSprintDataMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA);
-		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA));
+		assertThat(sprintResult, sprintResults().withOriginalSprintData(DATA));
 	}
 
 	@Test
 	public void originalSprintDataDoesntMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData("not" + DATA);
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().withOriginalSprintData(DATA)));
+		assertThat(sprintResult, not(sprintResults().withOriginalSprintData(DATA)));
 	}
 
 	@Test
 	public void verifiedCardMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARD);
-		assertThat(sprintResult, fuzzyMatchesSprintResults().whereVerifiedCardsContains(CARD));
+		assertThat(sprintResult, sprintResults().whereVerifiedCardsContains(CARD));
 	}
 
 	@Test
 	public void verifiedCardNotMatch() {
 		SprintResult sprintResult = new SprintResult();
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().whereVerifiedCardsContains(CARD)));
+		assertThat(sprintResult, not(sprintResults().whereVerifiedCardsContains(CARD)));
 	}
 
 	@Test
 	public void verifiedCardNotMatch2() {
 		SprintResult sprintResult = new SprintResult();
-		assertThat(sprintResult, fuzzyMatchesSprintResults().whereVerifiedCardsDoesNotContain(CARD));
+		assertThat(sprintResult, sprintResults().whereVerifiedCardsDoesNotContain(CARD));
 	}
 
 	@Test
 	public void verifiedCardMatch3() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARD);
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().whereVerifiedCardsDoesNotContain(CARD)));
+		assertThat(sprintResult, not(sprintResults().whereVerifiedCardsDoesNotContain(CARD)));
 	}
 
 	@Test
 	public void listOfVerifiedCardMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARDS);
-		assertThat(sprintResult, fuzzyMatchesSprintResults().whereVerifiedCardsContains(CARDS.get(0)));
+		assertThat(sprintResult, sprintResults().whereVerifiedCardsContains(CARDS.get(0)));
 	}
 
 	@Test
 	public void listOfVerifiedCardNotMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARDS);
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().whereVerifiedCardsContains(CARD)));
+		assertThat(sprintResult, not(sprintResults().whereVerifiedCardsContains(CARD)));
 	}
 
 	@Test
 	public void listOfVerifiedCardNotMatch2() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARDS);
-		assertThat(sprintResult, fuzzyMatchesSprintResults().whereVerifiedCardsDoesNotContain(CARD));
+		assertThat(sprintResult, sprintResults().whereVerifiedCardsDoesNotContain(CARD));
 	}
 
 	@Test
 	public void listOfVerifiedCardMatch3() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARDS);
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().whereVerifiedCardsDoesNotContain(CARDS.get(0))));
+		assertThat(sprintResult, not(sprintResults().whereVerifiedCardsDoesNotContain(CARDS.get(0))));
 	}
 
 	@Test
 	public void listOfVerifiedCardsMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARDS);
-		assertThat(sprintResult, fuzzyMatchesSprintResults().whereVerifiedCardsContains(CARDS.toArray(new Card[] {})));
+		assertThat(sprintResult, sprintResults().whereVerifiedCardsContains(CARDS.toArray(new Card[] {})));
 	}
 
 	@Test
@@ -97,15 +97,28 @@ public class SprintResultMatcherTest {
 		sprintResult.addVerified(Arrays.asList(new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM), new Card(
 				Card.Size.MEDIUM), new Card(Card.Size.MEDIUM)));
 		assertThat(sprintResult,
-				fuzzyMatchesSprintResults().whereVerifiedCardsDoesNotContain(CARDS.toArray(new Card[] {})));
+				sprintResults().whereVerifiedCardsDoesNotContain(CARDS.toArray(new Card[] {})));
 	}
 
+	@Test
+	public void hasVerifiedCards() {
+		SprintResult sprintResult = new SprintResult();
+		sprintResult.addVerified(CARD);
+		assertThat(sprintResult, sprintResults().thatHaveVerifiedCards());
+	}
+
+	@Test
+	public void hasNoVerifiedCards() {
+		SprintResult sprintResult = new SprintResult();
+		assertThat(sprintResult, not(sprintResults().thatHaveVerifiedCards()));
+	}
+	
 	@Test
 	public void developerIdleDaysMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult, fuzzyMatchesSprintResults().whereDeveloperIdleDaysAre(2));
+		assertThat(sprintResult, sprintResults().whereDeveloperIdleDaysAre(2));
 	}
 
 	@Test
@@ -113,7 +126,7 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().whereDeveloperIdleDaysAre(0)));
+		assertThat(sprintResult, not(sprintResults().whereDeveloperIdleDaysAre(0)));
 	}
 
 	@Test
@@ -121,7 +134,7 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult, fuzzyMatchesSprintResults().whereDeveloperIdleDaysAreBetween(1, 3));
+		assertThat(sprintResult, sprintResults().whereDeveloperIdleDaysAreBetween(1, 3));
 	}
 
 	@Test
@@ -129,20 +142,7 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().whereDeveloperIdleDaysAreBetween(3, 6)));
-	}
-
-	@Test
-	public void hasVerifiedCards() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addVerified(CARD);
-		assertThat(sprintResult, fuzzyMatchesSprintResults().hasVerifiedCards());
-	}
-
-	@Test
-	public void hasNoVerifiedCards() {
-		SprintResult sprintResult = new SprintResult();
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().hasVerifiedCards()));
+		assertThat(sprintResult, not(sprintResults().whereDeveloperIdleDaysAreBetween(3, 6)));
 	}
 
 	/** LEGACY **/
@@ -154,7 +154,7 @@ public class SprintResultMatcherTest {
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
 		assertThat(sprintResult,
-				fuzzyMatchesSprintResults().withOriginalSprintData(DATA).whereVerifiedCardsContains(CARD)
+				sprintResults().withOriginalSprintData(DATA).whereVerifiedCardsContains(CARD)
 						.whereDeveloperIdleDaysAre(2));
 	}
 
@@ -163,7 +163,7 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA + DATA);
 		sprintResult.addNotDone(CARD);
-		assertThat(sprintResult, not(fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
+		assertThat(sprintResult, not(sprintResults().withOriginalSprintData(DATA)
 				.whereVerifiedCardsContains(CARD).whereDeveloperIdleDaysAre(2)));
 	}
 
@@ -175,7 +175,7 @@ public class SprintResultMatcherTest {
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
 		assertThat(sprintResult,
-				fuzzyMatchesSprintResults().withOriginalSprintData(DATA).whereVerifiedCardsContains(CARD)
+				sprintResults().withOriginalSprintData(DATA).whereVerifiedCardsContains(CARD)
 						.whereDeveloperIdleDaysAreBetween(1, 5));
 	}
 
@@ -184,7 +184,7 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.setOriginalSprintData(DATA);
 		sprintResult.addVerified(CARD);
-		assertThat(sprintResult, fuzzyMatchesSprintResults().withOriginalSprintData(DATA)
+		assertThat(sprintResult, sprintResults().withOriginalSprintData(DATA)
 				.whereVerifiedCardsDoesNotContain(CARD));
 	}
 }

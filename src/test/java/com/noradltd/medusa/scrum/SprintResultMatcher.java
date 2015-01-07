@@ -22,7 +22,7 @@ public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 	private CombinableMatcher<?> combinableMatcher = null;
 
 	@Factory
-	public static SprintResultMatcher fuzzyMatchesSprintResults() {
+	public static SprintResultMatcher sprintResults() {
 		return new SprintResultMatcher();
 	}
 
@@ -343,27 +343,27 @@ public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 
 	}
 
-	public SprintResultMatcher hasVerifiedCards() {
+	public SprintResultMatcher thatHaveVerifiedCards() {
 		addToCombinableMatcher(new VerifiedCount(not(is(0)), "SprintResult.Verified.size()", "Verified.size()"));
 		return this;
 	}
 
-	public SprintResultMatcher hasDoneCards() {
+	public SprintResultMatcher thatHaveDoneCards() {
 		addToCombinableMatcher(new DoneCount(not(is(0)), "SprintResult.Done.size()", "Done.size()"));
 		return this;
 	}
 
-	public SprintResultMatcher hasNotDoneCards() {
+	public SprintResultMatcher thatHaveNotDoneCards() {
 		addToCombinableMatcher(new NotDoneCount(not(is(0)), "SprintResult.NotDone.size()", "NotDone.size()"));
 		return this;
 	}
 
-	public SprintResultMatcher hasNotStartedCards() {
+	public SprintResultMatcher thatHaveNotStartedCards() {
 		addToCombinableMatcher(new NotStartedCount(not(is(0)), "SprintResult.NotStarted.size()", "NotStarted.size()"));
 		return this;
 	}
 
-	public SprintResultMatcher hasDefectsCreated() {
+	public SprintResultMatcher thatHaveDefectsCreated() {
 		addToCombinableMatcher(new DefectsCreatedCount(not(is(0)), "SprintResult.DefectsCreated.size()",
 				"DefectsCreated.size()"));
 		return this;
