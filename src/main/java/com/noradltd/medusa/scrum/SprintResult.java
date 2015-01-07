@@ -25,7 +25,7 @@ public class SprintResult {
 	public void setOriginalSprintData(String sprint) {
 		originalSprintData = sprint;
 	}
-	
+
 	public String getOriginalSprintData() {
 		return originalSprintData;
 	}
@@ -45,7 +45,7 @@ public class SprintResult {
 	public Set<Card> getNotStarted() {
 		return notStarted;
 	}
-	
+
 	public Iterator<Card> getNotStartedIterator() {
 		return notStarted.iterator();
 	}
@@ -53,7 +53,7 @@ public class SprintResult {
 	public boolean hasUnstartedCards() {
 		return !notStarted.isEmpty();
 	}
-	
+
 	public Set<Defect> getDefectsCreated() {
 		return defectsCreated;
 	}
@@ -61,49 +61,73 @@ public class SprintResult {
 	public void addVerified(Card card) {
 		verified.add(card);
 	}
-	
+
 	public boolean removeVerified(Card card) {
 		return verified.remove(card);
 	}
-	
+
 	public void addDone(Card card) {
 		done.add(card);
 	}
-	
+
 	public boolean removeDone(Card card) {
 		return done.remove(card);
 	}
-	
+
 	public void addNotDone(Card card) {
 		notDone.add(card);
 	}
-	
+
 	public boolean removeNotDone(Card card) {
 		return notDone.remove(card);
 	}
-	
+
 	public void addNotStarted(Card card) {
 		notStarted.add(card);
 	}
-	
+
 	public boolean removeNotStarted(Card card) {
 		return notStarted.remove(card);
 	}
-	
+
 	public void addDefect(Defect defect) {
 		defectsCreated.add(defect);
 	}
-	
+
 	public boolean removeDefect(Defect defect) {
 		return defectsCreated.remove(defect);
 	}
 
 	public void addVerified(List<Card> cards) {
-		for(Card card:cards){
+		for (Card card : cards) {
 			addVerified(card);
 		}
 	}
-	
+
+	public void addDone(List<Card> cards) {
+		for (Card card : cards) {
+			addDone(card);
+		}
+	}
+
+	public void addNotDone(List<Card> cards) {
+		for (Card card : cards) {
+			addNotDone(card);
+		}
+	}
+
+	public void addNotStarted(List<Card> cards) {
+		for (Card card : cards) {
+			addNotStarted(card);
+		}
+	}
+
+	public void addDefects(List<Defect> defects) {
+		for (Defect defect : defects) {
+			addDefect(defect);
+		}
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

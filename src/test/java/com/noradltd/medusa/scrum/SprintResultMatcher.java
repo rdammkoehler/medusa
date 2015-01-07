@@ -17,6 +17,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.CombinableMatcher;
 
+@SuppressWarnings({ "PMD.GodClass", "PMD.TooManyMethods" })
 public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 
 	private CombinableMatcher<?> combinableMatcher = null;
