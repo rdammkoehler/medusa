@@ -1,6 +1,6 @@
 package com.noradltd.medusa.scrum;
 
-import static com.noradltd.medusa.scrum.SprintResultFuzzyMatcher.fuzzyMatchesSprintResults;
+import static com.noradltd.medusa.scrum.SprintResultMatcher.fuzzyMatchesSprintResults;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.noradltd.medusa.scrum.Card;
 import com.noradltd.medusa.scrum.SprintResult;
 
-public class SprintResultFuzzyMatcherTest {
+public class SprintResultMatcherTest {
 
 	private static final Card CARD = new Card(Card.Size.MEDIUM);
 	private static final List<Card> CARDS = Arrays.asList(new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM),
