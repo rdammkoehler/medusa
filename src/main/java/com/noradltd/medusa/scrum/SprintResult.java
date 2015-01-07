@@ -2,6 +2,7 @@ package com.noradltd.medusa.scrum;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class SprintResult {
@@ -96,17 +97,23 @@ public class SprintResult {
 	public boolean removeDefect(Defect defect) {
 		return defectsCreated.remove(defect);
 	}
+
+	public void addVerified(List<Card> cards) {
+		for(Card card:cards){
+			addVerified(card);
+		}
+	}
 	
-//	@Override
-//	public String toString() {
-//		StringBuilder sb = new StringBuilder();
-//		sb.append("Results, verified ").append(verified);
-//		sb.append(", done ").append(done);
-//		sb.append(", notDone ").append(notDone);
-//		sb.append(", notStarted ").append(notStarted);
-//		sb.append(", defectsCreated ").append(defectsCreated);
-//		sb.append(", developerIdleDays ").append(developerIdleDays);
-//		sb.append(", originalSprintData ").append(originalSprintData);
-//		return sb.toString();
-//	}
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Results, verified ").append(verified);
+		sb.append(", done ").append(done);
+		sb.append(", notDone ").append(notDone);
+		sb.append(", notStarted ").append(notStarted);
+		sb.append(", defectsCreated ").append(defectsCreated);
+		sb.append(", developerIdleDays ").append(developerIdleDays);
+		sb.append(", originalSprintData ").append(originalSprintData);
+		return sb.toString();
+	}
 }

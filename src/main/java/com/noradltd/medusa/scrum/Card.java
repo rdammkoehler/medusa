@@ -54,4 +54,8 @@ public class Card implements Comparable<Card> {
 		return id.compareTo(o.id);
 	}
 
+	@Override
+	public String toString() {
+		return "[Card:"+id+"]";
+	}
 }
