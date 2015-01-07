@@ -25,6 +25,7 @@ class SprintRunner {
 		loadCards();
 		loadDevelopers();
 
+		System.out.println("SPRINT---");
 		final int days = sprint.get("days").getAsInt();
 		for (int day = 0; day < days; day++) {
 			new CardAssigner(sprintResult, developers).assignCards();
@@ -36,10 +37,12 @@ class SprintRunner {
 	}
 
 	private void doADaysWork() {
+		System.out.println("---DAY");
 		for (SDeveloper developer : developers) {
 			if (developer.isWorking()) {
 				workACard(developer);
 			} else {
+				System.out.println(developer + " is a slacker!");
 				recordSlackTime();
 			}
 		}
@@ -110,6 +113,7 @@ class SDeveloper extends Developer {
 //	}
 
 	public void work() {
+		System.out.println(this + " is working on " + assignedCard);
 		remainingWork -= 1;
 	}
 
@@ -122,10 +126,10 @@ class SDeveloper extends Developer {
 		return remainingWork <= 0;
 	}
 
-//	@Override
-//	public String toString() {
-//		return new StringBuilder("Dev ").append(id).append("(").append(remainingWork).append(")").toString();
-//	}
+	@Override
+	public String toString() {
+		return new StringBuilder("Dev ").append(id).append("(").append(remainingWork).append(")").toString();
+	}
 
 	public boolean isDone() {
 		return remainingWork <= 0;

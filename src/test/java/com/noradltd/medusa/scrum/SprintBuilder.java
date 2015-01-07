@@ -59,6 +59,8 @@ public abstract class SprintBuilder {
 				currentCard.defectImpactRelativeToOriginalSize = 1.0f;
 				currentCard = cardItr.next();
 			}
+		} else {
+			System.err.println("you asked for " + defectCount + " defects to be added, but there are no cards in the sprint");
 		}
 		return sprint;
 	}

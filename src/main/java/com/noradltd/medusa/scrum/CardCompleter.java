@@ -15,7 +15,7 @@ public class CardCompleter {
 		sprintResult.removeNotDone(assignedCard);
 		sprintResult.addDone(assignedCard);
 		sprintResult.removeDone(assignedCard);
-		sprintResult.addVerified(assignedCard);
+		sprintResult.addVerified(assignedCard); //TODO add verifier and move this there
 		checkCardForDefects();
 	}
 	

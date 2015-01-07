@@ -4,7 +4,7 @@ import static com.noradltd.medusa.scrum.SprintBuilder.addDefectsTo;
 import static com.noradltd.medusa.scrum.SprintBuilder.defaultSprint;
 import static com.noradltd.medusa.scrum.SprintBuilder.overcommittedSprint;
 import static com.noradltd.medusa.scrum.SprintBuilder.undercommittedSprint;
-//import static com.noradltd.medusa.scrum.SprintResultMatcher.isValid;
+import static com.noradltd.medusa.scrum.SprintResultMatcher.isValid;
 import static com.noradltd.medusa.scrum.SprintStreamifier.sprintToStream;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
@@ -16,7 +16,7 @@ import cucumber.api.java.en.When;
 public class RunSprintSteps {
 
 	private static final int EXPECTED_IDLE_DAYS = 20;
-	private static final int DEFECTS_TO_CREATE = 5;
+	private static final int DEFECTS_TO_CREATE = 1;
 	private SprintResult sprintResult = new SprintResult();
 	private final SprintClock sprintClock = new SprintClock();
 
@@ -56,7 +56,7 @@ public class RunSprintSteps {
 
 	@Then("^I get sprint artifacts$")
 	public void i_get_sprint_artifacts() throws Throwable {
-//		assertThat(sprintResult, is(false));
+		assertThat(sprintResult, isValid());
 	}
 
 	@Then("^I not all cards are verified$")
