@@ -1,12 +1,12 @@
 package com.noradltd.medusa.scrum;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.Set;
 
@@ -17,20 +17,18 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.CombinableMatcher;
 
-import com.noradltd.medusa.scrum.Card;
-import com.noradltd.medusa.scrum.SprintResult;
-
 public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 
 	private CombinableMatcher<?> combinableMatcher = null;
 
 	@Factory
 	public static SprintResultMatcher fuzzyMatchesSprintResults() {
-		// seems like we build up a bunch of matchers in the with-statements and
-		// add them to a combinable matcher that came from here
-		// except that combinable matcher needs at least one matcher to get
-		// started, this matcher must be this matcher with no internal matchers
 		return new SprintResultMatcher();
+	}
+
+	@Factory
+	public static SprintResultMatcher isValid() {
+		return new SprintResultMatcher().hasOriginalSprintData().hasCards();
 	}
 
 	@Override
@@ -59,7 +57,7 @@ public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 		addToCombinableMatcher(verifiedContains(card));
 		return this;
 	}
-	
+
 	public SprintResultMatcher whereVerifiedCardsDoesNotContain(Card... card) {
 		addToCombinableMatcher(verifiedDoesNotContain(card));
 		return this;
@@ -93,7 +91,8 @@ public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 	}
 
 	private Matcher<?> developerIdleDaysBetween(Integer low, Integer high) {
-		return new DeveloperIdleDays((Matcher<? super Integer>) between(low, high), "SprintResult.DeveloperIdleDays", "DeveloperIdleDays");
+		return new DeveloperIdleDays((Matcher<? super Integer>) between(low, high), "SprintResult.DeveloperIdleDays",
+				"DeveloperIdleDays");
 	}
 
 	private Matcher<?> developerIdleDaysAre(Integer days) {
@@ -102,8 +101,7 @@ public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 
 	class Verified extends FeatureMatcher<SprintResult, Set<Card>> {
 
-		public Verified(Matcher<? super Set<Card>> subMatcher, String featureDescription,
-				String featureName) {
+		public Verified(Matcher<? super Set<Card>> subMatcher, String featureDescription, String featureName) {
 			super(subMatcher, featureDescription, featureName);
 		}
 
@@ -123,11 +121,11 @@ public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 	}
 
 	class OriginalSprintData extends FeatureMatcher<SprintResult, String> {
-		
+
 		public OriginalSprintData(Matcher<? super String> matcher, String featureDescription, String featureName) {
 			super(matcher, featureDescription, featureName);
 		}
-		
+
 		@Override
 		protected String featureValueOf(SprintResult actual) {
 			return actual.getOriginalSprintData();
@@ -135,6 +133,50 @@ public final class SprintResultMatcher extends TypeSafeMatcher<SprintResult> {
 	}
 
 	private Matcher<?> originalSprintDataIs(String string) {
-		return new OriginalSprintData((Matcher<? super String>) is(string), "SprintResult.OriginalSprintData", "OriginalSprintData");
+		return new OriginalSprintData((Matcher<? super String>) is(string), "SprintResult.OriginalSprintData",
+				"OriginalSprintData");
+	}
+
+	private SprintResultMatcher hasOriginalSprintData() {
+		addToCombinableMatcher(new OriginalSprintData(notNullValue(), "SprintResult.originalSprintData",
+				"originalSprintData"));
+		return this;
+	}
+
+	class CardCount extends FeatureMatcher<SprintResult, Integer> {
+
+		public CardCount(Matcher<? super Integer> subMatcher, String featureDescription, String featureName) {
+			super(subMatcher, featureDescription, featureName);
+		}
+
+		@Override
+		protected Integer featureValueOf(SprintResult actual) {
+			return actual.getDone().size() + actual.getNotDone().size() + actual.getNotStarted().size()
+					+ actual.getVerified().size();
+		}
+
+	}
+
+	class VerifiedCount extends FeatureMatcher<SprintResult, Integer> {
+
+		public VerifiedCount(Matcher<? super Integer> subMatcher, String featureDescription, String featureName) {
+			super(subMatcher, featureDescription, featureName);
+		}
+
+		@Override
+		protected Integer featureValueOf(SprintResult actual) {
+			return actual.getVerified().size();
+		}
+
+	}
+
+	private SprintResultMatcher hasCards() {
+		addToCombinableMatcher(new CardCount(not(is(0)), "SprintResult...size()", "...size()"));
+		return this;
+	}
+
+	public SprintResultMatcher hasVerifiedCards() {
+		addToCombinableMatcher(new VerifiedCount(not(is(0)), "SprintResult.Verified.size()", "Verified.size()"));
+		return this;
 	}
 }

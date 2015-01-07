@@ -5,13 +5,9 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
-
-import com.noradltd.medusa.scrum.Card;
-import com.noradltd.medusa.scrum.SprintResult;
 
 public class SprintResultMatcherTest {
 
@@ -136,6 +132,20 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult, not(fuzzyMatchesSprintResults().whereDeveloperIdleDaysAreBetween(3, 6)));
 	}
 
+	@Test
+	public void hasVerifiedCards() {
+		SprintResult sprintResult = new SprintResult();
+		sprintResult.addVerified(CARD);
+		assertThat(sprintResult, fuzzyMatchesSprintResults().hasVerifiedCards());
+	}
+
+	@Test
+	public void hasNoVerifiedCards() {
+		SprintResult sprintResult = new SprintResult();
+		assertThat(sprintResult, not(fuzzyMatchesSprintResults().hasVerifiedCards()));
+	}
+
+	/** LEGACY **/
 	@Test
 	public void itsExact() {
 		SprintResult sprintResult = new SprintResult();
