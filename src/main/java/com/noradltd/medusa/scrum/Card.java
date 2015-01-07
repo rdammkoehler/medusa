@@ -1,6 +1,8 @@
 package com.noradltd.medusa.scrum;
 
-public class Card implements Comparable<Card> {
+public class Card 
+//implements Comparable<Card> 
+{
 
 	public enum Size {
 		SMALL(1), MEDIUM(3), LARGE(5);
@@ -49,13 +51,13 @@ public class Card implements Comparable<Card> {
 		size = cardSize.getScalarSize();
 	}
 
-	@Override
-	public int compareTo(Card o) {
-		return id.compareTo(o.id);
-	}
-
-	@Override
-	public String toString() {
-		return "[Card:"+id+"]";
-	}
+//	@Override
+//	public int compareTo(Card o) {
+//		return id.compareTo(o.id);
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return "[Card:"+id+"]";
+//	}
 }

@@ -62,9 +62,9 @@ public class SprintResult {
 		verified.add(card);
 	}
 
-	public boolean removeVerified(Card card) {
-		return verified.remove(card);
-	}
+//	public boolean removeVerified(Card card) {
+//		return verified.remove(card);
+//	}
 
 	public void addDone(Card card) {
 		done.add(card);
@@ -94,9 +94,9 @@ public class SprintResult {
 		defectsCreated.add(defect);
 	}
 
-	public boolean removeDefect(Defect defect) {
-		return defectsCreated.remove(defect);
-	}
+//	public boolean removeDefect(Defect defect) {
+//		return defectsCreated.remove(defect);
+//	}
 
 	public void addVerified(List<Card> cards) {
 		for (Card card : cards) {
@@ -128,16 +128,16 @@ public class SprintResult {
 		}
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Results, verified ").append(verified);
-		sb.append(", done ").append(done);
-		sb.append(", notDone ").append(notDone);
-		sb.append(", notStarted ").append(notStarted);
-		sb.append(", defectsCreated ").append(defectsCreated);
-		sb.append(", developerIdleDays ").append(developerIdleDays);
-		sb.append(", originalSprintData ").append(originalSprintData);
-		return sb.toString();
-	}
+//	@Override
+//	public String toString() {
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("Results, verified ").append(verified);
+//		sb.append(", done ").append(done);
+//		sb.append(", notDone ").append(notDone);
+//		sb.append(", notStarted ").append(notStarted);
+//		sb.append(", defectsCreated ").append(defectsCreated);
+//		sb.append(", developerIdleDays ").append(developerIdleDays);
+//		sb.append(", originalSprintData ").append(originalSprintData);
+//		return sb.toString();
+//	}
 }

@@ -82,10 +82,10 @@ class SCard extends Card {
 		this.shouldCreateDefect = cardJson.get("shouldCreateDefect").getAsBoolean();
 	}
 
-	@Override
-	public String toString() {
-		return new StringBuilder("Card ").append(id).append("(").append(size).append(")").toString();
-	}
+//	@Override
+//	public String toString() {
+//		return new StringBuilder("Card ").append(id).append("(").append(size).append(")").toString();
+//	}
 }
 
 class SDeveloper extends Developer {
@@ -105,9 +105,9 @@ class SDeveloper extends Developer {
 		return assignedCard;
 	}
 
-	public Integer getRemainingWork() {
-		return remainingWork;
-	}
+//	public Integer getRemainingWork() {
+//		return remainingWork;
+//	}
 
 	public void work() {
 		remainingWork -= 1;
@@ -122,10 +122,10 @@ class SDeveloper extends Developer {
 		return remainingWork <= 0;
 	}
 
-	@Override
-	public String toString() {
-		return new StringBuilder("Dev ").append(id).append("(").append(remainingWork).append(")").toString();
-	}
+//	@Override
+//	public String toString() {
+//		return new StringBuilder("Dev ").append(id).append("(").append(remainingWork).append(")").toString();
+//	}
 
 	public boolean isDone() {
 		return remainingWork <= 0;
