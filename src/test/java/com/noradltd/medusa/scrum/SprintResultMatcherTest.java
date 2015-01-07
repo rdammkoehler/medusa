@@ -116,7 +116,6 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult, not(sprintResults().thatHaveVerifiedCards()));
 	}
 
-	/**/
 	@Test
 	public void doneCardMatch() {
 		SprintResult sprintResult = new SprintResult();
@@ -199,7 +198,6 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult, not(sprintResults().thatHaveDoneCards()));
 	}
 
-	/**/
 	@Test
 	public void notDoneCardMatch() {
 		SprintResult sprintResult = new SprintResult();
@@ -282,7 +280,6 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult, not(sprintResults().thatHaveNotDoneCards()));
 	}
 
-	/**/
 	@Test
 	public void notStartedCardMatch() {
 		SprintResult sprintResult = new SprintResult();
@@ -365,7 +362,6 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult, not(sprintResults().thatHaveNotStartedCards()));
 	}
 
-	/**/
 	@Test
 	public void defectsCreatedDefectMatch() {
 		SprintResult sprintResult = new SprintResult();
@@ -449,7 +445,6 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult, not(sprintResults().thatHaveDefectsCreated()));
 	}
 
-	/**/
 	@Test
 	public void developerIdleDaysMatch() {
 		SprintResult sprintResult = new SprintResult();
@@ -482,43 +477,4 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult, not(sprintResults().whereDeveloperIdleDaysAreBetween(3, 6)));
 	}
 
-	/** LEGACY **/
-	@Test
-	public void itsExact() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.setOriginalSprintData(DATA);
-		sprintResult.addVerified(CARD);
-		sprintResult.incDeveloperIdleDays();
-		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult, sprintResults().withOriginalSprintData(DATA).whereVerifiedCardsContains(CARD)
-				.whereDeveloperIdleDaysAre(2));
-	}
-
-	@Test
-	public void itsNotExact() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.setOriginalSprintData(DATA + DATA);
-		sprintResult.addNotDone(CARD);
-		assertThat(sprintResult, not(sprintResults().withOriginalSprintData(DATA).whereVerifiedCardsContains(CARD)
-				.whereDeveloperIdleDaysAre(2)));
-	}
-
-	@Test
-	public void itsFuzzy() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.setOriginalSprintData(DATA);
-		sprintResult.addVerified(CARD);
-		sprintResult.incDeveloperIdleDays();
-		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult, sprintResults().withOriginalSprintData(DATA).whereVerifiedCardsContains(CARD)
-				.whereDeveloperIdleDaysAreBetween(1, 5));
-	}
-
-	@Test
-	public void isntFuzzy() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.setOriginalSprintData(DATA);
-		sprintResult.addVerified(CARD);
-		assertThat(sprintResult, sprintResults().withOriginalSprintData(DATA).whereVerifiedCardsDoesNotContain(CARD));
-	}
 }

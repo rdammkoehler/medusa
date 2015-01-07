@@ -56,8 +56,8 @@ public class Card
 //		return id.compareTo(o.id);
 //	}
 //
-//	@Override
-//	public String toString() {
-//		return "[Card:"+id+"]";
-//	}
+	@Override
+	public String toString() {
+		return "[Card:"+id+"]";
+	}
 }
