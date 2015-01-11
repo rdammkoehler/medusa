@@ -27,6 +27,23 @@ public class RunSprintSteps {
 				sprintResult = result;
 			}
 		});
+		sprintClock.addResultListener(new SprintResultListener() {
+			@Override
+			public void sprintComplete(SprintResult result) {
+				if (!result.getDefectsCreated().isEmpty()) {
+					System.err.println("defects where created");
+				}
+				if (result.getNotStarted().size() > 0) {
+					System.err.println("some cards were not started");
+				}
+				if ( result.getNotDone().size() > 0 ) {
+					System.err.println("some cards were not finished");
+				}
+				if ( result.getDeveloperIdleDays() > 0 ) {
+					System.err.println("some developers were idle");
+				}
+			}
+		});
 	}
 
 	@Given("^over-committed sprint data$")
