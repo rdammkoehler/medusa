@@ -24,3 +24,7 @@ Other ideas?
 ## Data file layout
 
 What would the data file kinda' look like?
+
+## Change Log
+
+20140112 - Added Travis CI support
