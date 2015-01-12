@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ### Medusa
 
 A simulator of Scrum Team project executions
