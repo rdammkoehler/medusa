@@ -1,5 +1,6 @@
 package com.noradltd.medusa.scrum;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -62,10 +63,6 @@ public class SprintResult {
 		verified.add(card);
 	}
 
-//	public boolean removeVerified(Card card) {
-//		return verified.remove(card);
-//	}
-
 	public void addDone(Card card) {
 		done.add(card);
 	}
@@ -94,35 +91,31 @@ public class SprintResult {
 		defectsCreated.add(defect);
 	}
 
-//	public boolean removeDefect(Defect defect) {
-//		return defectsCreated.remove(defect);
-//	}
-
-	public void addVerified(List<Card> cards) {
+	public void addVerified(Collection<Card> cards) {
 		for (Card card : cards) {
 			addVerified(card);
 		}
 	}
 
-	public void addDone(List<Card> cards) {
+	public void addDone(Collection<Card> cards) {
 		for (Card card : cards) {
 			addDone(card);
 		}
 	}
 
-	public void addNotDone(List<Card> cards) {
+	public void addNotDone(Collection<Card> cards) {
 		for (Card card : cards) {
 			addNotDone(card);
 		}
 	}
 
-	public void addNotStarted(List<Card> cards) {
+	public void addNotStarted(Collection<Card> cards) {
 		for (Card card : cards) {
 			addNotStarted(card);
 		}
 	}
 
-	public void addDefects(List<Defect> defects) {
+	public void addDefects(Collection<Defect> defects) {
 		for (Defect defect : defects) {
 			addDefect(defect);
 		}

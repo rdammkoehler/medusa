@@ -1,11 +1,13 @@
 package com.noradltd.medusa.scrum;
 
-import static com.noradltd.medusa.scrum.SprintResultMatcher.assertThat;
+import static com.noradltd.medusa.scrum.SprintResultAssert.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class SprintResultMatcherTest {
 
@@ -20,71 +22,61 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void originalSprintDataMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.setOriginalSprintData(DATA);
+		SprintResult sprintResult = new SprintResultBuilder().withOriginalSprintData(DATA).build();
+		assertThat(sprintResult).hasOriginalSprintData(DATA);
+	}
+
+	@Test(expected=AssertionError.class)
+	public void originalSprintDataDoesntMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withOriginalSprintData("not" + DATA).build();
 		assertThat(sprintResult).hasOriginalSprintData(DATA);
 	}
 
 	@Test
-	public void originalSprintDataDoesntMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.setOriginalSprintData("not" + DATA);
-		// so, how in AssertJ Do you do negation?
-		// assertThat(sprintResult),
-		// not(sprintResults().withOriginalSprintData(DATA)));
-	}
-
-	@Test
 	public void verifiedCardMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addVerified(CARD);
+		SprintResult sprintResult = new SprintResultBuilder().withVerified(CARD).build();
 		assertThat(sprintResult).verifiedCardsContains(CARD);
 	}
 
 	@Test
 	public void verifiedCardNotMatch() {
-		SprintResult sprintResult = new SprintResult();
+		SprintResult sprintResult = new SprintResultBuilder().build();
 		assertThat(sprintResult).verifiedCardsDoesNotContain(CARD);
 	}
 
 	@Test
 	public void listOfVerifiedCardMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addVerified(CARDS);
+		SprintResult sprintResult = new SprintResultBuilder().withVerified(CARDS).build();
 		assertThat(sprintResult).verifiedCardsContains(CARDS.get(0));
 	}
 
 	@Test
 	public void listOfVerifiedCardNotMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addVerified(CARDS);
+		SprintResult sprintResult = new SprintResultBuilder().withVerified(CARDS).build();
 		assertThat(sprintResult).verifiedCardsDoesNotContain(CARD);
 	}
 
 	@Test
 	public void hasVerifiedCards() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addVerified(CARD);
+		SprintResult sprintResult = new SprintResultBuilder().withVerified(CARD).build();
 		assertThat(sprintResult).hasVerifiedCards();
 	}
 
 	@Test
 	public void hasNoVerifiedCards() {
 		SprintResult sprintResult = new SprintResult();
-		// again, how do I negate?
-		// assertThat(sprintResult).thatHaveVerifiedCards();
+		 assertThat(sprintResult).hasNoVerifiedCards();
 	}
 
 	@Test
 	public void hasNotStartedCards() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addNotStarted(CARD);
+		SprintResult sprintResult = new SprintResultBuilder().withNotStarted(CARD).build();
 		assertThat(sprintResult).hasNotStartedCards();
 	}
 
 	@Test
 	public void hasNoNotStartedCards() {
-		SprintResult sprintResult = new SprintResult();
+		SprintResult sprintResult = new SprintResultBuilder().build();
 		// how to negate?
 		// assertThat(sprintResult,
 		// not(sprintResults().thatHaveNotStartedCards()));
@@ -92,8 +84,7 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void defectsCreatedDefectMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefect(DEFECT);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECT).build();
 		assertThat(sprintResult).defectsCreatedContains(DEFECT);
 	}
 
@@ -107,14 +98,13 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void defectsCreatedDefectNotMatch2() {
-		SprintResult sprintResult = new SprintResult();
+		SprintResult sprintResult = new SprintResultBuilder().build();
 		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECT);
 	}
 
 	@Test
 	public void defectsCreatedDefectMatch3() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefect(DEFECT);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECT).build();
 		// negate?
 		// assertThat(sprintResult,
 		// not(sprintResults().whereDefectsCreatedDoesNotContain(DEFECT)));
@@ -122,15 +112,13 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void listOfDefectsCreatedDefectMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefects(DEFECTS);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECTS).build();
 		assertThat(sprintResult).defectsCreatedContains(DEFECTS.get(0));
 	}
 
 	@Test
 	public void listOfDefectsCreatedDefectNotMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefects(DEFECTS);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECTS).build();
 		// negate?
 		// assertThat(sprintResult,
 		// not(sprintResults().whereDefectsCreatedContains(DEFECT)));
@@ -138,15 +126,13 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void listOfDefectsCreatedDefectNotMatch2() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefects(DEFECTS);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECTS).build();
 		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECT);
 	}
 
 	@Test
 	public void listOfDefectsCreatedDefectMatch3() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefects(DEFECTS);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECTS).build();
 		// negate?
 		// assertThat(sprintResult,
 		// not(sprintResults().whereDefectsCreatedDoesNotContain(DEFECTS.get(0))));
@@ -154,29 +140,26 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void listOfDefectsCreatedDefectsMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefects(DEFECTS);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECTS).build();
 		assertThat(sprintResult).defectsCreatedContains(DEFECTS.toArray(new Defect[] {}));
 	}
 
 	@Test
 	public void listOfDefectsCreatedDefectsDoesNotMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefects(Arrays.asList(new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(
-				Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM))));
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(Arrays.asList(new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(
+				Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)))).build();
 		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECTS.toArray(new Defect[] {}));
 	}
 
 	@Test
 	public void hasDefectsCreatedDefects() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.addDefect(DEFECT);
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECT).build();
 		assertThat(sprintResult).hasDefectsCreated();
 	}
 
 	@Test
 	public void hasNoDefectsCreatedDefects() {
-		SprintResult sprintResult = new SprintResult();
+		SprintResult sprintResult = new SprintResultBuilder().build();
 		// negate?
 		// assertThat(sprintResult,
 		// not(sprintResults().thatHaveDefectsCreated()));
@@ -184,17 +167,13 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void developerIdleDaysMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.incDeveloperIdleDays();
-		sprintResult.incDeveloperIdleDays();
+		SprintResult sprintResult = new SprintResultBuilder().withDeveloperIdleDays(2).build();
 		assertThat(sprintResult).hasDeveloperIdleDays(2);
 	}
 
 	@Test
 	public void developerIdleDaysDontMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.incDeveloperIdleDays();
-		sprintResult.incDeveloperIdleDays();
+		SprintResult sprintResult = new SprintResultBuilder().withDeveloperIdleDays(2).build();
 		// negate?
 		// assertThat(sprintResult,
 		// not(sprintResults().whereDeveloperIdleDaysAre(0)));
@@ -202,17 +181,13 @@ public class SprintResultMatcherTest {
 
 	@Test
 	public void developerIdleDaysBetweenMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.incDeveloperIdleDays();
-		sprintResult.incDeveloperIdleDays();
+		SprintResult sprintResult = new SprintResultBuilder().withDeveloperIdleDays(2).build();
 		assertThat(sprintResult).hasDeveloperIdleDaysBetween(1, 3);
 	}
 
 	@Test
 	public void developerIdleDaysBetweenDontMatch() {
-		SprintResult sprintResult = new SprintResult();
-		sprintResult.incDeveloperIdleDays();
-		sprintResult.incDeveloperIdleDays();
+		SprintResult sprintResult = new SprintResultBuilder().withDeveloperIdleDays(2).build();
 		// negate?
 		// assertThat(sprintResult,
 		// not(sprintResults().whereDeveloperIdleDaysAreBetween(3, 6)));

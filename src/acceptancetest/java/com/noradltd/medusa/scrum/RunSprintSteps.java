@@ -4,7 +4,7 @@ import static com.noradltd.medusa.scrum.SprintBuilder.addDefectsTo;
 import static com.noradltd.medusa.scrum.SprintBuilder.defaultSprint;
 import static com.noradltd.medusa.scrum.SprintBuilder.overcommittedSprint;
 import static com.noradltd.medusa.scrum.SprintBuilder.undercommittedSprint;
-import static com.noradltd.medusa.scrum.SprintResultMatcher.assertThat;
+import static com.noradltd.medusa.scrum.SprintResultAssert.assertThat;
 import static com.noradltd.medusa.scrum.SprintStreamifier.sprintToStream;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
