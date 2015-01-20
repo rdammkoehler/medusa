@@ -38,34 +38,34 @@ public class SprintResultMatcherTest {
 	public void verifiedCardMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARD);
-		assertThat(sprintResult).whereVerifiedCardsContains(CARD);
+		assertThat(sprintResult).verifiedCardsContains(CARD);
 	}
 
 	@Test
 	public void verifiedCardNotMatch() {
 		SprintResult sprintResult = new SprintResult();
-		assertThat(sprintResult).whereVerifiedCardsDoesNotContain(CARD);
+		assertThat(sprintResult).verifiedCardsDoesNotContain(CARD);
 	}
 
 	@Test
 	public void listOfVerifiedCardMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARDS);
-		assertThat(sprintResult).whereVerifiedCardsContains(CARDS.get(0));
+		assertThat(sprintResult).verifiedCardsContains(CARDS.get(0));
 	}
 
 	@Test
 	public void listOfVerifiedCardNotMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARDS);
-		assertThat(sprintResult).whereVerifiedCardsDoesNotContain(CARD);
+		assertThat(sprintResult).verifiedCardsDoesNotContain(CARD);
 	}
 
 	@Test
 	public void hasVerifiedCards() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addVerified(CARD);
-		assertThat(sprintResult).thatHaveVerifiedCards();
+		assertThat(sprintResult).hasVerifiedCards();
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class SprintResultMatcherTest {
 	public void hasNotStartedCards() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addNotStarted(CARD);
-		assertThat(sprintResult).thatHaveNotStartedCards();
+		assertThat(sprintResult).hasNotStartedCards();
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class SprintResultMatcherTest {
 	public void defectsCreatedDefectMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addDefect(DEFECT);
-		assertThat(sprintResult).whereDefectsCreatedContains(DEFECT);
+		assertThat(sprintResult).defectsCreatedContains(DEFECT);
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class SprintResultMatcherTest {
 	@Test
 	public void defectsCreatedDefectNotMatch2() {
 		SprintResult sprintResult = new SprintResult();
-		assertThat(sprintResult).whereDefectsCreatedDoesNotContain(DEFECT);
+		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECT);
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class SprintResultMatcherTest {
 	public void listOfDefectsCreatedDefectMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addDefects(DEFECTS);
-		assertThat(sprintResult).whereDefectsCreatedContains(DEFECTS.get(0));
+		assertThat(sprintResult).defectsCreatedContains(DEFECTS.get(0));
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class SprintResultMatcherTest {
 	public void listOfDefectsCreatedDefectNotMatch2() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addDefects(DEFECTS);
-		assertThat(sprintResult).whereDefectsCreatedDoesNotContain(DEFECT);
+		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECT);
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class SprintResultMatcherTest {
 	public void listOfDefectsCreatedDefectsMatch() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addDefects(DEFECTS);
-		assertThat(sprintResult).whereDefectsCreatedContains(DEFECTS.toArray(new Defect[] {}));
+		assertThat(sprintResult).defectsCreatedContains(DEFECTS.toArray(new Defect[] {}));
 	}
 
 	@Test
@@ -164,14 +164,14 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addDefects(Arrays.asList(new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(
 				Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM))));
-		assertThat(sprintResult).whereDefectsCreatedDoesNotContain(DEFECTS.toArray(new Defect[] {}));
+		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECTS.toArray(new Defect[] {}));
 	}
 
 	@Test
 	public void hasDefectsCreatedDefects() {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.addDefect(DEFECT);
-		assertThat(sprintResult).thatHaveDefectsCreated();
+		assertThat(sprintResult).hasDefectsCreated();
 	}
 
 	@Test
@@ -187,7 +187,7 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult).whereDeveloperIdleDaysAre(2);
+		assertThat(sprintResult).hasDeveloperIdleDays(2);
 	}
 
 	@Test
@@ -205,7 +205,7 @@ public class SprintResultMatcherTest {
 		SprintResult sprintResult = new SprintResult();
 		sprintResult.incDeveloperIdleDays();
 		sprintResult.incDeveloperIdleDays();
-		assertThat(sprintResult).whereDeveloperIdleDaysAreBetween(1, 3);
+		assertThat(sprintResult).hasDeveloperIdleDaysBetween(1, 3);
 	}
 
 	@Test

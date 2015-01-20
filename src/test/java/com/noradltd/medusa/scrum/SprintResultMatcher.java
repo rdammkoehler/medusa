@@ -49,12 +49,12 @@ public final class SprintResultMatcher extends AbstractAssert<SprintResultMatche
 		}
 	}
 
-	public SprintResultMatcher whereVerifiedCardsContains(Card... cards) {
+	public SprintResultMatcher verifiedCardsContains(Card... cards) {
 		cardsContain("Verified", actual.getVerified(), cards);
 		return this;
 	}
 
-	public SprintResultMatcher whereVerifiedCardsDoesNotContain(Card... cards) {
+	public SprintResultMatcher verifiedCardsDoesNotContain(Card... cards) {
 		cardsDoNotContain("Verified", actual.getVerified(), cards);
 		return this;
 	}
@@ -89,31 +89,31 @@ public final class SprintResultMatcher extends AbstractAssert<SprintResultMatche
 		return this;
 	}
 
-	public SprintResultMatcher whereDefectsCreatedContains(Defect... defects) {
+	public SprintResultMatcher defectsCreatedContains(Defect... defects) {
 		cardsContain("Defects", actual.getDefectsCreated(), defects);
 		return this;
 	}
 
-	public SprintResultMatcher whereDefectsCreatedDoesNotContain(Defect... defects) {
+	public SprintResultMatcher defectsCreatedDoesNotContain(Defect... defects) {
 		cardsDoNotContain("Defects", actual.getDefectsCreated(), defects);
 		return this;
 	}
 
-	public SprintResultMatcher whereDeveloperIdleDaysAre(Integer days) {
+	public SprintResultMatcher hasDeveloperIdleDays(Integer days) {
 		if (!actual.getDeveloperIdleDays().equals(days)) {
 			failWithMessage("Developer Idle Days not equal to expected", days, actual.getDeveloperIdleDays());
 		}
 		return this;
 	}
 
-	public SprintResultMatcher whereDeveloperIdleDaysAreBetween(Integer low, Integer high) {
+	public SprintResultMatcher hasDeveloperIdleDaysBetween(Integer low, Integer high) {
 		if (!(actual.getDeveloperIdleDays() >= low && actual.getDeveloperIdleDays() <= high)) {
 			failWithMessage("Developer Idle Days not in expected range", low, high, actual.getDeveloperIdleDays());
 		}
 		return this;
 	}
 
-	public SprintResultMatcher thatHaveVerifiedCards() {
+	public SprintResultMatcher hasVerifiedCards() {
 		if (actual.getVerified().isEmpty()) {
 			failWithMessage("Expected some verified cards", actual.getVerified());
 		}
@@ -134,14 +134,14 @@ public final class SprintResultMatcher extends AbstractAssert<SprintResultMatche
 		return this;
 	}
 
-	public SprintResultMatcher thatHaveNotStartedCards() {
+	public SprintResultMatcher hasNotStartedCards() {
 		if (actual.getNotStarted().isEmpty()) {
 			failWithMessage("Expected some not started cards", actual.getNotStarted());
 		}
 		return this;
 	}
 
-	public SprintResultMatcher thatHaveDefectsCreated() {
+	public SprintResultMatcher hasDefectsCreated() {
 		if (actual.getDefectsCreated().isEmpty()) {
 			failWithMessage("Expected some defects created cards", actual.getDefectsCreated());
 		}
