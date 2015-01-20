@@ -4,7 +4,7 @@ import static com.noradltd.medusa.scrum.SprintBuilder.addDefectsTo;
 import static com.noradltd.medusa.scrum.SprintBuilder.defaultSprint;
 import static com.noradltd.medusa.scrum.SprintBuilder.overcommittedSprint;
 import static com.noradltd.medusa.scrum.SprintBuilder.undercommittedSprint;
-import static com.noradltd.medusa.scrum.SprintResultMatcher.isValid;
+import static com.noradltd.medusa.scrum.SprintResultMatcher.assertThat;
 import static com.noradltd.medusa.scrum.SprintStreamifier.sprintToStream;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
@@ -73,7 +73,7 @@ public class RunSprintSteps {
 
 	@Then("^I get sprint artifacts$")
 	public void i_get_sprint_artifacts() throws Throwable {
-		assertThat(sprintResult, isValid());
+		assertThat(sprintResult).isValid();
 	}
 
 	@Then("^I not all cards are verified$")
