@@ -1,5 +1,6 @@
 package com.noradltd.medusa.scrum;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.assertj.core.api.AbstractAssert;
@@ -127,45 +128,45 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 		return this;
 	}
 
-	public SprintResultAssert hasNoVerifiedCards() {
-		if (!actual.getVerified().isEmpty()) {
-			failWithMessage("Expected no verified cards", actual.getVerified());
+	private void expectEmptyCollection(String listName, Collection<? extends Card> collection) {
+		if ( !collection.isEmpty() ) {
+			failWithMessage("Expected no " + listName + " cards", collection);
 		}
+	}
+
+	private void expectNotEmptyCollection(String listName, Collection<? extends Card> collection) {
+		if (collection.isEmpty()) {
+			failWithMessage("Expected some " + listName + " cards", collection);
+		}
+	}
+	
+	public SprintResultAssert hasNoVerifiedCards() {
+		expectEmptyCollection(VERIFIED_CARD_LIST_NAME, actual.getVerified());
 		return this;
 	}
 
 	public SprintResultAssert hasVerifiedCards() {
-		if (actual.getVerified().isEmpty()) {
-			failWithMessage("Expected some verified cards", actual.getVerified());
-		}
+		expectNotEmptyCollection(VERIFIED_CARD_LIST_NAME, actual.getVerified());
 		return this;
 	}
 
-	public SprintResultAssert thatHaveDoneCards() {
-		if (actual.getDone().isEmpty()) {
-			failWithMessage("Expected some done cards", actual.getDone());
-		}
+	public SprintResultAssert hasDoneCards() {
+		expectNotEmptyCollection(DONE_CARD_LIST_NAME, actual.getDone());
 		return this;
 	}
 
-	public SprintResultAssert thatHaveNotDoneCards() {
-		if (actual.getNotDone().isEmpty()) {
-			failWithMessage("Expected some not done cards", actual.getNotDone());
-		}
+	public SprintResultAssert hasNotDoneCards() {
+		expectNotEmptyCollection(NOT_DONE_CARD_LIST_NAME, actual.getNotDone());
 		return this;
 	}
 
 	public SprintResultAssert hasNotStartedCards() {
-		if (actual.getNotStarted().isEmpty()) {
-			failWithMessage("Expected some not started cards", actual.getNotStarted());
-		}
+		expectNotEmptyCollection(NOT_STARTED_CARD_LIST_NAME, actual.getNotStarted());
 		return this;
 	}
 
 	public SprintResultAssert hasDefectsCreated() {
-		if (actual.getDefectsCreated().isEmpty()) {
-			failWithMessage("Expected some defects created cards", actual.getDefectsCreated());
-		}
+		expectNotEmptyCollection(DEFECTS_CARD_LIST_NAME, actual.getDefectsCreated());
 		return this;
 	}
 }

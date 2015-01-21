@@ -13,12 +13,12 @@ import org.junit.rules.ExpectedException;
 public class SprintResultAssertTest {
 
 	private static final String ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH = "Original Sprint Data does not match";
-	private static final String EXPECTED_SOME_NOT_STARTED_CARDS = "Expected some not started cards";
+	private static final String EXPECTED_SOME_NOT_STARTED_CARDS = "Expected some Not Started cards";
 	private static final String DEFECTS_CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S = "Defects Cards does not contain expected card(s)";
 	private static final String DEFECTS_CARDS_CONTAIN_UNEXPECTED_CARD_S = "Defects Cards contain unexpected card(s)";
 	private static final String DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE = "Developer Idle Days not in expected range";
 	private static final String DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED = "Developer Idle Days not equal to expected";
-	private static final String EXPECTED_DEFECT_CARDS = "Expected some defects created cards";
+	private static final String EXPECTED_DEFECT_CARDS = "Expected some Defects cards";
 	private static final Card CARD = new Card(Card.Size.MEDIUM);
 	private static final List<Card> CARDS = Arrays.asList(new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM),
 			new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM));
