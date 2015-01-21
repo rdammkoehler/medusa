@@ -7,6 +7,19 @@ import org.assertj.core.api.AbstractAssert;
 @SuppressWarnings({ "PMD.GodClass", "PMD.TooManyMethods" })
 public final class SprintResultAssert extends AbstractAssert<SprintResultAssert, SprintResult> {
 
+	private static final String DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE = "Developer Idle Days not in expected range";
+	private static final String DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED = "Developer Idle Days not equal to expected";
+	private static final String DEFECTS_CARD_LIST_NAME = "Defects";
+	private static final String NOT_STARTED_CARD_LIST_NAME = "Not Started";
+	private static final String NOT_DONE_CARD_LIST_NAME = "Not Done";
+	private static final String DONE_CARD_LIST_NAME = "Done";
+	private static final String VERIFIED_CARD_LIST_NAME = "Verified";
+	private static final String CARDS_CONTAIN_UNEXPECTED_CARD_S = " Cards contain unexpected card(s)";
+	private static final String CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S = " Cards does not contain expected card(s)";
+	private static final String ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH = "Original Sprint Data does not match";
+	private static final String SPRINT_RESULT_HAS_NO_CARDS = "Sprint Result has no cards";
+	private static final String SPRINT_RESULT_HAS_NO_ORIGINAL_SPRINT_DATA = "Sprint Result has no original Sprint Data";
+
 	protected SprintResultAssert(SprintResult actual) {
 		super(actual, SprintResultAssert.class);
 	}
@@ -18,18 +31,18 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 	// this could be significantly better
 	public SprintResultAssert isValid() {
 		if (actual.getOriginalSprintData().isEmpty()) {
-			failWithMessage("Sprint Result has no original Sprint Data", actual.getOriginalSprintData());
+			failWithMessage(SPRINT_RESULT_HAS_NO_ORIGINAL_SPRINT_DATA, actual.getOriginalSprintData());
 		}
 		if (actual.getDone().size() + actual.getNotDone().size() + actual.getNotStarted().size()
 				+ actual.getVerified().size() <= 0) {
-			failWithMessage("Sprint Result has no cards", actual);
+			failWithMessage(SPRINT_RESULT_HAS_NO_CARDS, actual);
 		}
 		return this;
 	}
 
 	public SprintResultAssert hasOriginalSprintData(String sprintData) {
 		if (!actual.getOriginalSprintData().equals(sprintData)) {
-			failWithMessage("Original Sprint Data does not match", sprintData, actual.getOriginalSprintData());
+			failWithMessage(ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH, sprintData, actual.getOriginalSprintData());
 		}
 		return this;
 	}
@@ -37,7 +50,7 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 	private void cardsContain(String listname, Set<? extends Card> list, Card... cards) {
 		for (Card card : cards) {
 			if (!list.contains(card)) {
-				failWithMessage(listname + " Cards does not contain expected card(s)", cards, actual.getVerified());
+				failWithMessage(listname + CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S, cards, actual.getVerified());
 			}
 		}
 	}
@@ -45,71 +58,71 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 	private void cardsDoNotContain(String listname, Set<? extends Card> list, Card... cards) {
 		for (Card card : cards) {
 			if (list.contains(card)) {
-				failWithMessage(listname + " Cards contain unexpected card(s)", cards, actual.getVerified());
+				failWithMessage(listname + CARDS_CONTAIN_UNEXPECTED_CARD_S, cards, actual.getVerified());
 			}
 		}
 	}
 
 	public SprintResultAssert verifiedCardsContains(Card... cards) {
-		cardsContain("Verified", actual.getVerified(), cards);
+		cardsContain(VERIFIED_CARD_LIST_NAME, actual.getVerified(), cards);
 		return this;
 	}
 
 	public SprintResultAssert verifiedCardsDoesNotContain(Card... cards) {
-		cardsDoNotContain("Verified", actual.getVerified(), cards);
+		cardsDoNotContain(VERIFIED_CARD_LIST_NAME, actual.getVerified(), cards);
 		return this;
 	}
 
 	public SprintResultAssert whereDoneCardsContains(Card... cards) {
-		cardsContain("Done", actual.getDone(), cards);
+		cardsContain(DONE_CARD_LIST_NAME, actual.getDone(), cards);
 		return this;
 	}
 
 	public SprintResultAssert whereDoneCardsDoesNotContain(Card... cards) {
-		cardsDoNotContain("Done", actual.getDone(), cards);
+		cardsDoNotContain(DONE_CARD_LIST_NAME, actual.getDone(), cards);
 		return this;
 	}
 
 	public SprintResultAssert whereNotDoneCardsContains(Card... cards) {
-		cardsContain("Not Done", actual.getNotDone(), cards);
+		cardsContain(NOT_DONE_CARD_LIST_NAME, actual.getNotDone(), cards);
 		return this;
 	}
 
 	public SprintResultAssert whereNotDoneCardsDoesNotContain(Card... cards) {
-		cardsDoNotContain("Not Done", actual.getNotDone(), cards);
+		cardsDoNotContain(NOT_DONE_CARD_LIST_NAME, actual.getNotDone(), cards);
 		return this;
 	}
 
 	public SprintResultAssert whereNotStartedCardsContains(Card... cards) {
-		cardsContain("Not Started", actual.getNotStarted(), cards);
+		cardsContain(NOT_STARTED_CARD_LIST_NAME, actual.getNotStarted(), cards);
 		return this;
 	}
 
 	public SprintResultAssert whereNotStartedCardsDoesNotContain(Card... cards) {
-		cardsDoNotContain("Not Started", actual.getNotStarted(), cards);
+		cardsDoNotContain(NOT_STARTED_CARD_LIST_NAME, actual.getNotStarted(), cards);
 		return this;
 	}
 
 	public SprintResultAssert defectsCreatedContains(Defect... defects) {
-		cardsContain("Defects", actual.getDefectsCreated(), defects);
+		cardsContain(DEFECTS_CARD_LIST_NAME, actual.getDefectsCreated(), defects);
 		return this;
 	}
 
 	public SprintResultAssert defectsCreatedDoesNotContain(Defect... defects) {
-		cardsDoNotContain("Defects", actual.getDefectsCreated(), defects);
+		cardsDoNotContain(DEFECTS_CARD_LIST_NAME, actual.getDefectsCreated(), defects);
 		return this;
 	}
 
 	public SprintResultAssert hasDeveloperIdleDays(Integer days) {
 		if (!actual.getDeveloperIdleDays().equals(days)) {
-			failWithMessage("Developer Idle Days not equal to expected", days, actual.getDeveloperIdleDays());
+			failWithMessage(DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED, days, actual.getDeveloperIdleDays());
 		}
 		return this;
 	}
 
 	public SprintResultAssert hasDeveloperIdleDaysBetween(Integer low, Integer high) {
 		if (!(actual.getDeveloperIdleDays() >= low && actual.getDeveloperIdleDays() <= high)) {
-			failWithMessage("Developer Idle Days not in expected range", low, high, actual.getDeveloperIdleDays());
+			failWithMessage(DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE, low, high, actual.getDeveloperIdleDays());
 		}
 		return this;
 	}

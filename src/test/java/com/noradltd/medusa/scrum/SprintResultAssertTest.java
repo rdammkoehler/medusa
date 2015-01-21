@@ -12,6 +12,13 @@ import org.junit.rules.ExpectedException;
 
 public class SprintResultAssertTest {
 
+	private static final String ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH = "Original Sprint Data does not match";
+	private static final String EXPECTED_SOME_NOT_STARTED_CARDS = "Expected some not started cards";
+	private static final String DEFECTS_CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S = "Defects Cards does not contain expected card(s)";
+	private static final String DEFECTS_CARDS_CONTAIN_UNEXPECTED_CARD_S = "Defects Cards contain unexpected card(s)";
+	private static final String DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE = "Developer Idle Days not in expected range";
+	private static final String DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED = "Developer Idle Days not equal to expected";
+	private static final String EXPECTED_DEFECT_CARDS = "Expected some defects created cards";
 	private static final Card CARD = new Card(Card.Size.MEDIUM);
 	private static final List<Card> CARDS = Arrays.asList(new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM),
 			new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM));
@@ -27,17 +34,21 @@ public class SprintResultAssertTest {
 		assertThat(sprintResult).hasOriginalSprintData(DATA);
 	}
 
-	@Rule 
+	@Rule
 	public ExpectedException exception = ExpectedException.none();
-	
+
+	private void expectAssertionErrorWithMessageContaining(String message) {
+		exception.expect(AssertionError.class);
+		exception.expectMessage(containsString(message));
+		exception.handleAssertionErrors();
+	}
+
 	@Test
 	public void originalSprintDataDoesntMatch() {
 		SprintResult sprintResult = new SprintResultBuilder().withOriginalSprintData("not" + DATA).build();
-		
-		exception.expect(AssertionError.class);
-		exception.expectMessage(containsString("Original Sprint Data does not match"));
-		exception.handleAssertionErrors();
-		
+
+		expectAssertionErrorWithMessageContaining(ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH);
+
 		assertThat(sprintResult).hasOriginalSprintData(DATA);
 	}
 
@@ -74,7 +85,7 @@ public class SprintResultAssertTest {
 	@Test
 	public void hasNoVerifiedCards() {
 		SprintResult sprintResult = new SprintResult();
-		 assertThat(sprintResult).hasNoVerifiedCards();
+		assertThat(sprintResult).hasNoVerifiedCards();
 	}
 
 	@Test
@@ -86,9 +97,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void hasNoNotStartedCards() {
 		SprintResult sprintResult = new SprintResultBuilder().build();
-		// how to negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().thatHaveNotStartedCards()));
+
+		expectAssertionErrorWithMessageContaining(EXPECTED_SOME_NOT_STARTED_CARDS);
+
+		assertThat(sprintResult).hasNotStartedCards();
 	}
 
 	@Test
@@ -100,9 +112,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void defectsCreatedDefectNotMatch() {
 		SprintResult sprintResult = new SprintResult();
-		// how to negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().whereDefectsCreatedContains(DEFECT)));
+
+		expectAssertionErrorWithMessageContaining(DEFECTS_CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S);
+
+		assertThat(sprintResult).defectsCreatedContains(DEFECT);
 	}
 
 	@Test
@@ -114,9 +127,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void defectsCreatedDefectMatch3() {
 		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECT).build();
-		// negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().whereDefectsCreatedDoesNotContain(DEFECT)));
+
+		expectAssertionErrorWithMessageContaining(DEFECTS_CARDS_CONTAIN_UNEXPECTED_CARD_S);
+
+		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECT);
 	}
 
 	@Test
@@ -128,9 +142,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void listOfDefectsCreatedDefectNotMatch() {
 		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECTS).build();
-		// negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().whereDefectsCreatedContains(DEFECT)));
+
+		expectAssertionErrorWithMessageContaining(DEFECTS_CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S);
+
+		assertThat(sprintResult).defectsCreatedContains(DEFECT);
 	}
 
 	@Test
@@ -142,9 +157,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void listOfDefectsCreatedDefectMatch3() {
 		SprintResult sprintResult = new SprintResultBuilder().withDefect(DEFECTS).build();
-		// negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().whereDefectsCreatedDoesNotContain(DEFECTS.get(0))));
+
+		expectAssertionErrorWithMessageContaining(DEFECTS_CARDS_CONTAIN_UNEXPECTED_CARD_S);
+
+		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECTS.get(0));
 	}
 
 	@Test
@@ -155,8 +171,9 @@ public class SprintResultAssertTest {
 
 	@Test
 	public void listOfDefectsCreatedDefectsDoesNotMatch() {
-		SprintResult sprintResult = new SprintResultBuilder().withDefect(Arrays.asList(new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(
-				Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)))).build();
+		SprintResult sprintResult = new SprintResultBuilder().withDefect(
+				Arrays.asList(new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)),
+						new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)))).build();
 		assertThat(sprintResult).defectsCreatedDoesNotContain(DEFECTS.toArray(new Defect[] {}));
 	}
 
@@ -169,9 +186,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void hasNoDefectsCreatedDefects() {
 		SprintResult sprintResult = new SprintResultBuilder().build();
-		// negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().thatHaveDefectsCreated()));
+
+		expectAssertionErrorWithMessageContaining(EXPECTED_DEFECT_CARDS);
+
+		assertThat(sprintResult).hasDefectsCreated();
 	}
 
 	@Test
@@ -183,9 +201,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void developerIdleDaysDontMatch() {
 		SprintResult sprintResult = new SprintResultBuilder().withDeveloperIdleDays(2).build();
-		// negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().whereDeveloperIdleDaysAre(0)));
+
+		expectAssertionErrorWithMessageContaining(DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED);
+
+		assertThat(sprintResult).hasDeveloperIdleDays(0);
 	}
 
 	@Test
@@ -197,9 +216,10 @@ public class SprintResultAssertTest {
 	@Test
 	public void developerIdleDaysBetweenDontMatch() {
 		SprintResult sprintResult = new SprintResultBuilder().withDeveloperIdleDays(2).build();
-		// negate?
-		// assertThat(sprintResult,
-		// not(sprintResults().whereDeveloperIdleDaysAreBetween(3, 6)));
+
+		expectAssertionErrorWithMessageContaining(DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE);
+
+		assertThat(sprintResult).hasDeveloperIdleDaysBetween(3, 6);
 	}
 
 }
