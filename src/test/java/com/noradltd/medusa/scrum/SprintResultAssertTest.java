@@ -1,6 +1,7 @@
 package com.noradltd.medusa.scrum;
 
 import static com.noradltd.medusa.scrum.SprintResultAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class SprintResultMatcherTest {
+public class SprintResultAssertTest {
 
 	private static final Card CARD = new Card(Card.Size.MEDIUM);
 	private static final List<Card> CARDS = Arrays.asList(new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM),
@@ -26,9 +27,17 @@ public class SprintResultMatcherTest {
 		assertThat(sprintResult).hasOriginalSprintData(DATA);
 	}
 
-	@Test(expected=AssertionError.class)
+	@Rule 
+	public ExpectedException exception = ExpectedException.none();
+	
+	@Test
 	public void originalSprintDataDoesntMatch() {
 		SprintResult sprintResult = new SprintResultBuilder().withOriginalSprintData("not" + DATA).build();
+		
+		exception.expect(AssertionError.class);
+		exception.expectMessage(containsString("Original Sprint Data does not match"));
+		exception.handleAssertionErrors();
+		
 		assertThat(sprintResult).hasOriginalSprintData(DATA);
 	}
 
