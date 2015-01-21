@@ -1,5 +1,16 @@
 package com.noradltd.medusa.scrum;
 
+import static com.noradltd.medusa.scrum.SprintResultAssert.CARDS_CONTAIN_UNEXPECTED_CARD_S;
+import static com.noradltd.medusa.scrum.SprintResultAssert.CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S;
+import static com.noradltd.medusa.scrum.SprintResultAssert.CARDS_SUFFIX;
+import static com.noradltd.medusa.scrum.SprintResultAssert.DEFECTS_CARD_LIST_NAME;
+import static com.noradltd.medusa.scrum.SprintResultAssert.DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED;
+import static com.noradltd.medusa.scrum.SprintResultAssert.DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE;
+import static com.noradltd.medusa.scrum.SprintResultAssert.EXPECTED_SOME;
+import static com.noradltd.medusa.scrum.SprintResultAssert.NOT_STARTED_CARD_LIST_NAME;
+import static com.noradltd.medusa.scrum.SprintResultAssert.ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH;
+import static com.noradltd.medusa.scrum.SprintResultAssert.SPRINT_RESULT_HAS_NO_CARDS;
+import static com.noradltd.medusa.scrum.SprintResultAssert.SPRINT_RESULT_HAS_NO_ORIGINAL_SPRINT_DATA;
 import static com.noradltd.medusa.scrum.SprintResultAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
@@ -12,13 +23,13 @@ import org.junit.rules.ExpectedException;
 
 public class SprintResultAssertTest {
 
-	private static final String ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH = "Original Sprint Data does not match";
-	private static final String EXPECTED_SOME_NOT_STARTED_CARDS = "Expected some Not Started cards";
-	private static final String DEFECTS_CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S = "Defects Cards does not contain expected card(s)";
-	private static final String DEFECTS_CARDS_CONTAIN_UNEXPECTED_CARD_S = "Defects Cards contain unexpected card(s)";
-	private static final String DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE = "Developer Idle Days not in expected range";
-	private static final String DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED = "Developer Idle Days not equal to expected";
-	private static final String EXPECTED_DEFECT_CARDS = "Expected some Defects cards";
+	private static final String EXPECTED_SOME_NOT_STARTED_CARDS = EXPECTED_SOME + NOT_STARTED_CARD_LIST_NAME
+			+ CARDS_SUFFIX;
+	private static final String DEFECTS_CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S = DEFECTS_CARD_LIST_NAME
+			+ CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S;
+	private static final String DEFECTS_CARDS_CONTAIN_UNEXPECTED_CARD_S = DEFECTS_CARD_LIST_NAME
+			+ CARDS_CONTAIN_UNEXPECTED_CARD_S;
+	private static final String EXPECTED_DEFECT_CARDS = EXPECTED_SOME + DEFECTS_CARD_LIST_NAME + CARDS_SUFFIX;
 	private static final Card CARD = new Card(Card.Size.MEDIUM);
 	private static final List<Card> CARDS = Arrays.asList(new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM),
 			new Card(Card.Size.MEDIUM), new Card(Card.Size.MEDIUM));
@@ -27,6 +38,23 @@ public class SprintResultAssertTest {
 			.asList(new Defect(new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)), new Defect(
 					new Card(Card.Size.MEDIUM)), new Defect(new Card(Card.Size.MEDIUM)));
 	private static final String DATA = "data";
+
+	@Test
+	public void validIsValid() {
+		assertThat(new SprintResultBuilder().withOriginalSprintData(DATA).withVerified(CARDS).build()).isValid();
+	}
+
+	@Test
+	public void invalidIsInvalid() {
+		expectAssertionErrorWithMessageContaining(SPRINT_RESULT_HAS_NO_ORIGINAL_SPRINT_DATA);
+		assertThat(new SprintResultBuilder().build()).isValid();
+	}
+
+	@Test
+	public void invalidIsInvalidToo() {
+		expectAssertionErrorWithMessageContaining(SPRINT_RESULT_HAS_NO_CARDS);
+		assertThat(new SprintResultBuilder().withOriginalSprintData(DATA).build());
+	}
 
 	@Test
 	public void originalSprintDataMatch() {

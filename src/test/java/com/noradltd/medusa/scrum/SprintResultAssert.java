@@ -8,18 +8,21 @@ import org.assertj.core.api.AbstractAssert;
 @SuppressWarnings({ "PMD.GodClass", "PMD.TooManyMethods" })
 public final class SprintResultAssert extends AbstractAssert<SprintResultAssert, SprintResult> {
 
-	private static final String DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE = "Developer Idle Days not in expected range";
-	private static final String DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED = "Developer Idle Days not equal to expected";
-	private static final String DEFECTS_CARD_LIST_NAME = "Defects";
-	private static final String NOT_STARTED_CARD_LIST_NAME = "Not Started";
-	private static final String NOT_DONE_CARD_LIST_NAME = "Not Done";
-	private static final String DONE_CARD_LIST_NAME = "Done";
-	private static final String VERIFIED_CARD_LIST_NAME = "Verified";
-	private static final String CARDS_CONTAIN_UNEXPECTED_CARD_S = " Cards contain unexpected card(s)";
-	private static final String CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S = " Cards does not contain expected card(s)";
-	private static final String ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH = "Original Sprint Data does not match";
-	private static final String SPRINT_RESULT_HAS_NO_CARDS = "Sprint Result has no cards";
-	private static final String SPRINT_RESULT_HAS_NO_ORIGINAL_SPRINT_DATA = "Sprint Result has no original Sprint Data";
+	static final String NOT_STARTED_CARD_LIST_NAME = "Not Started";
+	static final String NOT_DONE_CARD_LIST_NAME = "Not Done";
+	static final String DONE_CARD_LIST_NAME = "Done";
+	static final String VERIFIED_CARD_LIST_NAME = "Verified";
+	static final String DEFECTS_CARD_LIST_NAME = "Defect";
+	static final String CARDS_SUFFIX = " cards";
+	static final String EXPECTED_SOME = "Expected some ";
+	static final String EXPECTED_NO = "Expected no ";
+	static final String DEVELOPER_IDLE_DAYS_NOT_IN_EXPECTED_RANGE = "Developer Idle Days not in expected range";
+	static final String DEVELOPER_IDLE_DAYS_NOT_EQUAL_TO_EXPECTED = "Developer Idle Days not equal to expected";
+	static final String CARDS_CONTAIN_UNEXPECTED_CARD_S = " Cards contain unexpected card(s)";
+	static final String CARDS_DOES_NOT_CONTAIN_EXPECTED_CARD_S = " Cards does not contain expected card(s)";
+	static final String ORIGINAL_SPRINT_DATA_DOES_NOT_MATCH = "Original Sprint Data does not match";
+	static final String SPRINT_RESULT_HAS_NO_CARDS = "Sprint Result has no cards";
+	static final String SPRINT_RESULT_HAS_NO_ORIGINAL_SPRINT_DATA = "Sprint Result has no original Sprint Data";
 
 	protected SprintResultAssert(SprintResult actual) {
 		super(actual, SprintResultAssert.class);
@@ -31,7 +34,7 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 
 	// this could be significantly better
 	public SprintResultAssert isValid() {
-		if (actual.getOriginalSprintData().isEmpty()) {
+		if (null == actual.getOriginalSprintData() || actual.getOriginalSprintData().isEmpty()) {
 			failWithMessage(SPRINT_RESULT_HAS_NO_ORIGINAL_SPRINT_DATA, actual.getOriginalSprintData());
 		}
 		if (actual.getDone().size() + actual.getNotDone().size() + actual.getNotStarted().size()
@@ -129,17 +132,17 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 	}
 
 	private void expectEmptyCollection(String listName, Collection<? extends Card> collection) {
-		if ( !collection.isEmpty() ) {
-			failWithMessage("Expected no " + listName + " cards", collection);
+		if (!collection.isEmpty()) {
+			failWithMessage(EXPECTED_NO + listName + CARDS_SUFFIX, collection);
 		}
 	}
 
 	private void expectNotEmptyCollection(String listName, Collection<? extends Card> collection) {
 		if (collection.isEmpty()) {
-			failWithMessage("Expected some " + listName + " cards", collection);
+			failWithMessage(EXPECTED_SOME + listName + CARDS_SUFFIX, collection);
 		}
 	}
-	
+
 	public SprintResultAssert hasNoVerifiedCards() {
 		expectEmptyCollection(VERIFIED_CARD_LIST_NAME, actual.getVerified());
 		return this;
