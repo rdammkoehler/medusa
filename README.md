@@ -3,6 +3,10 @@
 A simulator of Scrum Team project executions
 work in progress, please don't judge me just yet.
 
+### Build Status
+
+[![Build Status](https://travis-ci.org/rdammkoehler/medusa.svg?branch=master)](https://travis-ci.org/rdammkoehler/medusa)
+
 ## Description
 
 Using some kind of data file input, emulate the execution of a team over time. 
