@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public class SprintResultBuilder {
 
-	private SprintResult sprintResult = new SprintResult();
+	private final SprintResult sprintResult = new SprintResult();
 
 	public SprintResultBuilder withOriginalSprintData(String data) {
 		sprintResult.setOriginalSprintData(data);
@@ -39,6 +39,26 @@ public class SprintResultBuilder {
 
 	public SprintResultBuilder withDefect(Defect... defects) {
 		sprintResult.addDefects(Arrays.asList(defects));
+		return this;
+	}
+
+	public SprintResultBuilder withDone(Card... cards) {
+		sprintResult.addDone(Arrays.asList(cards));
+		return this;
+	}
+
+	public SprintResultBuilder withDone(Collection<Card> cards) {
+		sprintResult.addDone(cards);
+		return this;
+	}
+
+	public SprintResultBuilder withNotDone(Card... cards) {
+		sprintResult.addNotDone(Arrays.asList(cards));
+		return this;
+	}
+
+	public SprintResultBuilder withNotDone(Collection<Card> cards) {
+		sprintResult.addNotDone(cards);
 		return this;
 	}
 

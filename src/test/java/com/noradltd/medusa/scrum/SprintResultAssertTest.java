@@ -117,6 +117,30 @@ public class SprintResultAssertTest {
 	}
 
 	@Test
+	public void notStartedCardMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withNotStarted(CARD).build();
+		assertThat(sprintResult).notStartedCardsContains(CARD);
+	}
+
+	@Test
+	public void notStartedCardNotMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().build();
+		assertThat(sprintResult).notStartedCardsDoesNotContain(CARD);
+	}
+
+	@Test
+	public void listOfNotStartedCardMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withNotStarted(CARDS).build();
+		assertThat(sprintResult).notStartedCardsContains(CARDS.get(0));
+	}
+
+	@Test
+	public void listOfNotStartedCardNotMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withNotStarted(CARDS).build();
+		assertThat(sprintResult).notStartedCardsDoesNotContain(CARD);
+	}
+
+	@Test
 	public void hasNotStartedCards() {
 		SprintResult sprintResult = new SprintResultBuilder().withNotStarted(CARD).build();
 		assertThat(sprintResult).hasNotStartedCards();
@@ -124,6 +148,84 @@ public class SprintResultAssertTest {
 
 	@Test
 	public void hasNoNotStartedCards() {
+		SprintResult sprintResult = new SprintResult();
+		assertThat(sprintResult).hasNoNotStartedCards();
+	}
+
+	@Test
+	public void doneCardMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withDone(CARD).build();
+		assertThat(sprintResult).doneCardsContains(CARD);
+	}
+
+	@Test
+	public void doneCardNotMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().build();
+		assertThat(sprintResult).doneCardsDoesNotContain(CARD);
+	}
+
+	@Test
+	public void listOfDoneCardMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withDone(CARDS).build();
+		assertThat(sprintResult).doneCardsContains(CARDS.get(0));
+	}
+
+	@Test
+	public void listOfDoneCardNotMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withDone(CARDS).build();
+		assertThat(sprintResult).doneCardsDoesNotContain(CARD);
+	}
+
+	@Test
+	public void hasDoneCards() {
+		SprintResult sprintResult = new SprintResultBuilder().withDone(CARD).build();
+		assertThat(sprintResult).hasDoneCards();
+	}
+
+	@Test
+	public void hasNoDoneCards() {
+		SprintResult sprintResult = new SprintResult();
+		assertThat(sprintResult).hasNoDoneCards();
+	}
+
+	@Test
+	public void notDoneCardMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withNotDone(CARD).build();
+		assertThat(sprintResult).notDoneCardsContains(CARD);
+	}
+
+	@Test
+	public void notDoneCardNotMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().build();
+		assertThat(sprintResult).notDoneCardsDoesNotContain(CARD);
+	}
+
+	@Test
+	public void listOfNotDoneCardMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withNotDone(CARDS).build();
+		assertThat(sprintResult).notDoneCardsContains(CARDS.get(0));
+	}
+
+	@Test
+	public void listOfNotDoneCardNotMatch() {
+		SprintResult sprintResult = new SprintResultBuilder().withNotDone(CARDS).build();
+		assertThat(sprintResult).notDoneCardsDoesNotContain(CARD);
+	}
+
+	@Test
+	public void hasNotDoneCards() {
+		SprintResult sprintResult = new SprintResultBuilder().withNotDone(CARD).build();
+		assertThat(sprintResult).hasNotDoneCards();
+	}
+
+	@Test
+	public void hasNoNotDoneCards() {
+		SprintResult sprintResult = new SprintResult();
+		assertThat(sprintResult).hasNoNotDoneCards();
+	}
+
+	@Test
+	public void doesntHaveNotStartedCards() {
 		SprintResult sprintResult = new SprintResultBuilder().build();
 
 		expectAssertionErrorWithMessageContaining(EXPECTED_SOME_NOT_STARTED_CARDS);

@@ -77,32 +77,32 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 		return this;
 	}
 
-	public SprintResultAssert whereDoneCardsContains(Card... cards) {
+	public SprintResultAssert doneCardsContains(Card... cards) {
 		cardsContain(DONE_CARD_LIST_NAME, actual.getDone(), cards);
 		return this;
 	}
 
-	public SprintResultAssert whereDoneCardsDoesNotContain(Card... cards) {
+	public SprintResultAssert doneCardsDoesNotContain(Card... cards) {
 		cardsDoNotContain(DONE_CARD_LIST_NAME, actual.getDone(), cards);
 		return this;
 	}
 
-	public SprintResultAssert whereNotDoneCardsContains(Card... cards) {
+	public SprintResultAssert notDoneCardsContains(Card... cards) {
 		cardsContain(NOT_DONE_CARD_LIST_NAME, actual.getNotDone(), cards);
 		return this;
 	}
 
-	public SprintResultAssert whereNotDoneCardsDoesNotContain(Card... cards) {
+	public SprintResultAssert notDoneCardsDoesNotContain(Card... cards) {
 		cardsDoNotContain(NOT_DONE_CARD_LIST_NAME, actual.getNotDone(), cards);
 		return this;
 	}
 
-	public SprintResultAssert whereNotStartedCardsContains(Card... cards) {
+	public SprintResultAssert notStartedCardsContains(Card... cards) {
 		cardsContain(NOT_STARTED_CARD_LIST_NAME, actual.getNotStarted(), cards);
 		return this;
 	}
 
-	public SprintResultAssert whereNotStartedCardsDoesNotContain(Card... cards) {
+	public SprintResultAssert notStartedCardsDoesNotContain(Card... cards) {
 		cardsDoNotContain(NOT_STARTED_CARD_LIST_NAME, actual.getNotStarted(), cards);
 		return this;
 	}
@@ -158,8 +158,23 @@ public final class SprintResultAssert extends AbstractAssert<SprintResultAssert,
 		return this;
 	}
 
+	public SprintResultAssert hasNoDoneCards() {
+		expectEmptyCollection(DONE_CARD_LIST_NAME, actual.getDone());
+		return this;
+	}
+
 	public SprintResultAssert hasNotDoneCards() {
 		expectNotEmptyCollection(NOT_DONE_CARD_LIST_NAME, actual.getNotDone());
+		return this;
+	}
+
+	public SprintResultAssert hasNoNotDoneCards() {
+		expectEmptyCollection(NOT_DONE_CARD_LIST_NAME, actual.getNotDone());
+		return this;
+	}
+
+	public SprintResultAssert hasNoNotStartedCards() {
+		expectEmptyCollection(NOT_STARTED_CARD_LIST_NAME, actual.getNotStarted());
 		return this;
 	}
 
